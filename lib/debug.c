@@ -10,7 +10,7 @@ static volatile char g_TRBuffer[TWBUFF_LEN];
 static volatile uint8 g_TConn = 0u; 
 #endif
 
-void * Uart_putat(void * ap, const char *s, size_t n)
+/*void * Uart_putat(void * ap, const char *s, size_t n)
 {
     //Uart *uart = (Uart*)ap;
     
@@ -21,7 +21,7 @@ void * Uart_putat(void * ap, const char *s, size_t n)
     }
     
     return ap;
-}
+}*/
 
 int8 Debug_printf(Debug_Level debugLevel, const char* pFormat, ...)
 {

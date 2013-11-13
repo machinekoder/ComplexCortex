@@ -44,7 +44,7 @@
 #define TRBUFF_FULL() (TRBUFF_TPTR==((TRBUFF_CPTR-1)&(TRBUFF_SIZE-1u)))
 #define TRBUFF_INC(n) (++n&(TRBUFF_SIZE-1u))
 
-//#include <stdio.h>
+#include <stdio.h>
 #include <stdarg.h>
 #include <format.h>
 #include <types.h>
