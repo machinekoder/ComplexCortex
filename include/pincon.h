@@ -25,7 +25,7 @@ typedef enum {
     Pin_Mode_Repeater = 1u,
     Pin_Mode_NoPullUpDown = 2u,
     Pin_Mode_PullDown = 3u
-} PinMode;
+} Pin_Mode;
 
 typedef enum { 
     Pin_OpenDrain_Disable = 0u,
@@ -43,7 +43,7 @@ void Pin_setFunction(uint8 port, uint8 pin, Pin_Function function);
  *  @param pin Pin number.
  *  @param mode Mode that should be set on the pin.
  */
-void Pin_setMode(uint8 port, uint8 pin, PinMode mode);
+void Pin_setMode(uint8 port, uint8 pin, Pin_Mode mode);
 /** Set open drain mode of the selected pin, lookup the open drain modes in the manul (PINMODE_OD)
  *  @param port Port of the pin.
  *  @param pin Pin number.

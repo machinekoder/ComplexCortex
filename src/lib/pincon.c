@@ -37,7 +37,7 @@ void Pin_setFunction(uint8 port, uint8 pin, Pin_Function function)
     return;
 }
 
-void Pin_setMode(uint8 port, uint8 pin, PinMode mode)
+void Pin_setMode(uint8 port, uint8 pin, Pin_Mode mode)
 {
     uint8 functionBits;
     

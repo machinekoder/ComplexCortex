@@ -62,13 +62,13 @@ void Ssp_initialize(Ssp ssp,
                         else
                         {
                             SSP0_SET_CORE_CLK_DIVISOR_2();
-                            pclk = SystemCoreClock/2;
+                            pclk = SystemCoreClock/2u;
                         }
                     }
                     else
                     {
                         SSP0_SET_CORE_CLK_DIVISOR_4();
-                        pclk = SystemCoreClock/4;
+                        pclk = SystemCoreClock/4u;
                     }
                 }
                 else
@@ -161,7 +161,7 @@ void Ssp_initialize(Ssp ssp,
         { 
                 cpsdvsr = 126u;
                 scr = 127u;
-                pclk = baudrate*(cpsdvsr*(scr+1));
+                pclk = baudrate*(cpsdvsr*(scr+1u));
                 divisor = SystemCoreClock/pclk;
                 
                 // calculate core clock divisor

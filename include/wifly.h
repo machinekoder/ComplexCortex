@@ -11,14 +11,11 @@
 
 #pragma once
 
-#define WIFLY_PRINTF_BUFFER_SIZE 100u
-
 #include <uart.h>
 #include <types.h>
 #include <timer.h>
 #include <timeout.h>
-#include <printf.h>
-#include <stdarg.h>
+#include <xprintf.h>
 
 typedef enum {
     WiFly_State_Connected = 0u,
@@ -27,11 +24,11 @@ typedef enum {
 
 int8 WiFly_initialize(Uart uart, uint32 baudrate);
 
-/**  Sets the adhoc beacon interval in milliseconds. Default is 100. */
+/**  Sets the adhoc beacon interval in milliseconds. Default is 102. */
 int8 WiFly_setAdhocBeacon(uint32 ms);
 /**  Sets the adhoc probe timeout in seconds. This is the number of seconds
 waiting for probe responses before declaring, “ADHOC is lost” and
-disabling the network interface. Default is 60. */
+disabling the network interface. Default is 5. */
 int8 WiFly_setAdhocProbe(uint32 num);
 
 /**  Sets the address to which the UDP hello/heartbeat message is sent. The
@@ -520,6 +517,8 @@ with the time server parameters (see section 5.9) This command sends a
 UDP time server request packet.*/
 void WiFly_actionTime();
 
+int8 WiFly_actionAPmode(char* ssid, uint8 channel);
+
 /** Deletes a file. Optional <num> will override the name and use the sector
 number shown in the “ls” command.*/
 void WiFly_fileIoDel(char *name);
@@ -558,13 +557,13 @@ int8 WiFly_getchar(char* c);
  *  @param s Pointer to the formated string
  *  @param n Bytes to write
  */
-void * WiFly_putat( void * ap, const char *s, size_t n );
+void WiFly_putat( void* ap, const char s );
 /** Custom printf function for WiFly.
  *  @param format Formated string.
  *  @param ... Formatting parameters.
  *  @return Returns bytes written to the WiFly module
  */
-int32 WiFly_printf(char* format, ...);
+void WiFly_printf(char* fmt, ...);
 
 /** Sets the command processing function for WiFly.
  *  @param func Pointer to the function that should be called when a command arives
@@ -589,6 +588,7 @@ uint8 WiFly_isConnected();
 int8 WiFly_setAdhocParams();
 int8 WiFly_setInfrastructureParams();
 int8 WiFly_createAdhocNetwork(char *ssid);
+int8 WiFly_createAccessPoint(char *ssid);
 
 /**
  * @}

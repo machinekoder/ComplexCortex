@@ -13,7 +13,7 @@ typedef struct {
 
 volatile ButtonConfig  buttons[BUTTON_MAX_COUNT];
 volatile ButtonValue val[BUTTON_MAX_COUNT];
-volatile uint8   buttonCount = 0;
+volatile uint8   buttonCount = 0u;
 
 volatile uint32 maxunset;
 
@@ -57,9 +57,9 @@ void Button_initializeButton(uint8 id, uint8 port, uint8 pin, Button_Type type)
 {
     Gpio_setDirection(port, pin, Gpio_Direction_Input );    //direction 0=input
     if(type == Button_Type_LowActive)
-      Pin_setMode(port, pin, Pin_Mode_PullUp);
+        Pin_setMode(port, pin, Pin_Mode_PullUp);
     if(type == Button_Type_HighActive)
-       Pin_setMode(port, pin, Pin_Mode_PullDown);
+        Pin_setMode(port, pin, Pin_Mode_PullDown);
     
     buttons[id].id     = id;
     buttons[id].port   = port;

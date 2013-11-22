@@ -233,6 +233,20 @@ void Rfm12_ookToggle(Rfm12 id)
         ookStatus[id] = true;
     }
 }
+
+void Rfm12_disablePower(Rfm12 id)
+{
+    Rfm12_setPowerManagement(id, 
+                             Rfm12_ReceiverDisabled, 
+                             Rfm12_BasebandDisabled, 
+                             Rfm12_TransmitterDisabled, 
+                             Rfm12_SynthesizerDisabled, 
+                             Rfm12_OscillatorDisabled,
+                             Rfm12_BrownoutDetectionDisabled,
+                             Rfm12_WakeupTimerDisabled,
+                             Rfm12_ClockOutputDisabled);
+}
+
 void Rfm12_setBaseConfig(Rfm12 id,
                         Rfm12_TxFifo txFifoEnable, 
                         Rfm12_RxFifo rxFifoEnable, 

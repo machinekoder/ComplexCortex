@@ -1,5 +1,6 @@
 #include "iap.h"
 
+#define IAP_LOCATION 0x1FFF1FF1
 #define CCLK_KHZ SystemCoreClock/1000
 
 static const uint32 flashSectorAddress[] = {
@@ -38,17 +39,17 @@ enum IapCommandCodes{
 
 typedef void (*iapEntry_t)(uint32 [], uint32 []);
 
-static iapEntry_t iapEntry = (iapEntry_t)0x1fff1ff1;
+iapEntry_t iapEntry = (iapEntry_t)IAP_LOCATION;
 
-int32 Iap_readId(void)
+uint32 Iap_readId(void)
 {
     uint32 cmd[5];
     uint32 res[5];
     
-    cmd[0]= IapCommandReadPartId;
+    cmd[0] = (uint32)IapCommandReadPartId;
     iapEntry(cmd,res);
     
-    return ((int32)res[1]);
+    return res[1];
 }
 
 int32 Iap_readVersion(void)

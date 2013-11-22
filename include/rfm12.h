@@ -318,6 +318,8 @@ void Rfm12_ookSet(Rfm12 id);
 void Rfm12_ookClear(Rfm12 id);
 void Rfm12_ookToggle(Rfm12 id);
 
+void Rfm12_disablePower(Rfm12 id);
+
 void Rfm12_setBaseConfig(Rfm12 id,
                         Rfm12_TxFifo txFifoEnable, 
                         Rfm12_RxFifo rxFifoEnable, 

@@ -101,10 +101,10 @@ int8 initializeUart0(uint32 baudrate)
     UART0_ENABLE_AND_RESET_FIFO();  // Enable and reset TX and RX FIFO
     
 #if (USE_UART_BUFFER == 1)
-    if (Cb_initialize(&uart0ReadBuffer, UART_READ_BUFFER_SIZE, sizeof(char), (void*)uart0ReadBufferData) == -1)      // Initialize circular read buffer
+    if (Cb_initialize(&uart0ReadBuffer, UART_READ_BUFFER_SIZE, sizeof(char), (void*)uart0ReadBufferData) == (int8)(-1))      // Initialize circular read buffer
         return (int8)(-1);
     
-    if (Cb_initialize(&uart0WriteBuffer, UART_WRITE_BUFFER_SIZE, sizeof(char), (void*)uart0WriteBufferData) == -1)    //Initialize circular write buffer
+    if (Cb_initialize(&uart0WriteBuffer, UART_WRITE_BUFFER_SIZE, sizeof(char), (void*)uart0WriteBufferData) == (int8)(-1))    //Initialize circular write buffer
         return (int8)(-1);
     
     UART0_SET_RBR_AND_THRE_INTERRUPT();      // Set the Receiver Data Ready interrupt
@@ -133,10 +133,10 @@ int8 initializeUart1(uint32 baudrate)
     UART1_ENABLE_AND_RESET_FIFO();  // Enable and reset TX and RX FIFO
     
 #if (USE_UART_BUFFER == 1)
-    if (Cb_initialize(&uart1ReadBuffer, UART_READ_BUFFER_SIZE, sizeof(char), (void*)uart1ReadBufferData) == -1)      // Initialize circular read buffer
+    if (Cb_initialize(&uart1ReadBuffer, UART_READ_BUFFER_SIZE, sizeof(char), (void*)uart1ReadBufferData) == (int8)(-1))      // Initialize circular read buffer
         return (int8)(-1);
     
-    if (Cb_initialize(&uart1WriteBuffer, UART_WRITE_BUFFER_SIZE, sizeof(char), (void*)uart1WriteBufferData) == -1)    //Initialize circular write buffer
+    if (Cb_initialize(&uart1WriteBuffer, UART_WRITE_BUFFER_SIZE, sizeof(char), (void*)uart1WriteBufferData) == (int8)(-1))    //Initialize circular write buffer
         return (int8)(-1);
     
     UART1_SET_RBR_AND_THRE_INTERRUPT();      // Set the Receiver Data Ready interrupt
@@ -165,10 +165,10 @@ int8 initializeUart2(uint32 baudrate)
     UART2_ENABLE_AND_RESET_FIFO();  // Enable and reset TX and RX FIFO
     
 #if (USE_UART_BUFFER == 1)
-    if (Cb_initialize(&uart2ReadBuffer, UART_READ_BUFFER_SIZE, sizeof(char), (void*)uart2ReadBufferData) == -1)      // Initialize circular read buffer
+    if (Cb_initialize(&uart2ReadBuffer, UART_READ_BUFFER_SIZE, sizeof(char), (void*)uart2ReadBufferData) == (int8)(-1))      // Initialize circular read buffer
         return (int8)(-1);
     
-    if (Cb_initialize(&uart2WriteBuffer, UART_WRITE_BUFFER_SIZE, sizeof(char), (void*)uart2WriteBufferData) == -1)    //Initialize circular write buffer
+    if (Cb_initialize(&uart2WriteBuffer, UART_WRITE_BUFFER_SIZE, sizeof(char), (void*)uart2WriteBufferData) == (int8)(-1))    //Initialize circular write buffer
         return (int8)(-1);
     
     UART2_SET_RBR_AND_THRE_INTERRUPT();      // Set the Receiver Data Ready interrupt
@@ -197,10 +197,10 @@ int8 initializeUart3(uint32 baudrate)
     UART3_ENABLE_AND_RESET_FIFO();  // Enable and reset TX and RX FIFO
     
 #if (USE_UART_BUFFER == 1)
-    if (Cb_initialize(&uart3ReadBuffer, UART_READ_BUFFER_SIZE, sizeof(char), (void*)uart3ReadBufferData) == -1)      // Initialize circular read buffer
+    if (Cb_initialize(&uart3ReadBuffer, UART_READ_BUFFER_SIZE, sizeof(char), (void*)uart3ReadBufferData) == (int8)(-1))      // Initialize circular read buffer
         return (int8)(-1);
     
-    if (Cb_initialize(&uart3WriteBuffer, UART_WRITE_BUFFER_SIZE, sizeof(char), (void*)uart3WriteBufferData) == -1)    //Initialize circular write buffer
+    if (Cb_initialize(&uart3WriteBuffer, UART_WRITE_BUFFER_SIZE, sizeof(char), (void*)uart3WriteBufferData) == (int8)(-1))    //Initialize circular write buffer
         return (int8)(-1);
     
     UART3_SET_RBR_AND_THRE_INTERRUPT();      // Set the Receiver Data Ready interrupt
@@ -246,7 +246,7 @@ void UART0_IRQHANDLER()
     }
     else                                        // Else interrupt comes from THRE or put function
     {
-        if (Cb_get(&uart0WriteBuffer,&c) == 0)   // If data is available
+        if (Cb_get(&uart0WriteBuffer,&c) == (int8)(0))   // If data is available
             UART0_SET_CHAR(c);                  // Put data to the uart, disables interrupt
     }
 }
@@ -264,7 +264,7 @@ void UART1_IRQHANDLER()
     }
     else                                        // Else interrupt comes from THRE or put function
     {
-        if (Cb_get(&uart1WriteBuffer,&c) == 0)   // If data is available
+        if (Cb_get(&uart1WriteBuffer,&c) == (int8)(0))   // If data is available
             UART1_SET_CHAR(c);                  // Put data to the uart, disables interrupt
     }
 }
@@ -282,7 +282,7 @@ void UART2_IRQHANDLER()
     }
     else                                        // Else interrupt comes from THRE or put function
     {
-        if (Cb_get(&uart2WriteBuffer,&c) == 0)   // If data is available
+        if (Cb_get(&uart2WriteBuffer,&c) == (int8)(0))   // If data is available
             UART2_SET_CHAR(c);                  // Put data to the uart, disables interrupt
     }
 }
@@ -300,7 +300,7 @@ void UART3_IRQHANDLER()
     }
     else                                        // Else interrupt comes from THRE or put function
     {
-        if (Cb_get(&uart3WriteBuffer,&c) == 0)   // If data is available
+        if (Cb_get(&uart3WriteBuffer,&c) == (int8)(0))   // If data is available
             UART3_SET_CHAR(c);                  // Put data to the uart, disables interrupt
     }
 }
@@ -546,82 +546,53 @@ int8 Uart_getchar(Uart uart, char *c)
     }
 }
 
-/*int8 printfUart0(char *format, ...)
+void Uart_putat( void * ptr, const char s)
 {
-    va_list arg_ptr;
-    uint16 i = 0u;
-    
-    va_start(arg_ptr,format);
-    vsnprintf(printfBuffer,UART_PRINTF_BUFFER_SIZE, format, arg_ptr);
-    va_end(arg_ptr);
-    
-    while (printfBuffer[i] != 0)      // Loop through until reach string's zero terminator
-    {
-        if (putcharUart0(printfBuffer[i]) == -1)
-            return -1;
-        i++;
-    }
-    
-    return 0;
-}*/
-
-void * Uart_putat( void * ap, const char *s, size_t n )
-{
-    Uart *uart = (Uart*)ap;
-    
-    while (n--)
-    {
-        Uart_putchar(*uart, *s++);
-    }
-    
-    return (void*)uart;
+    Uart_putchar(*((Uart*)ptr), s);
 }
 
-int32 Uart_printf(Uart uart, char *args, ...)
+void Uart_printf(Uart uart, char *args, ...)
 {    
     va_list arg_ptr;
-    int32 bytesSend;
     
     va_start(arg_ptr,args);
-    bytesSend = format(Uart_putat, &uart, args, arg_ptr);
+    xformat(Uart_putat, &uart, args, arg_ptr);
     va_end(arg_ptr);
-    
-    return (int32)(bytesSend);
 }
 
 void flushUart0(void)
 {
     char byteRead;
-    while (Cb_get(&uart0ReadBuffer, (void*)&byteRead) == 0)
+    while (Cb_get(&uart0ReadBuffer, (void*)&byteRead) == (int8)(0))
         ;
-    while (Cb_get(&uart0WriteBuffer, (void*)&byteRead) == 0)
+    while (Cb_get(&uart0WriteBuffer, (void*)&byteRead) == (int8)(0))
         ;
 }
 
 void flushUart1(void)
 {
     char byteRead;
-    while (Cb_get(&uart1ReadBuffer, (void*)&byteRead) == 0)
+    while (Cb_get(&uart1ReadBuffer, (void*)&byteRead) == (int8)(0))
         ;
-    while (Cb_get(&uart1WriteBuffer, (void*)&byteRead) == 0)
+    while (Cb_get(&uart1WriteBuffer, (void*)&byteRead) == (int8)(0))
         ;
 }
 
 void flushUart2(void)
 {
     char byteRead;
-    while (Cb_get(&uart2ReadBuffer, (void*)&byteRead) == 0)
+    while (Cb_get(&uart2ReadBuffer, (void*)&byteRead) == (int8)(0))
         ;
-    while (Cb_get(&uart2WriteBuffer, (void*)&byteRead) == 0)
+    while (Cb_get(&uart2WriteBuffer, (void*)&byteRead) == (int8)(0))
         ;
 }
 
 void flushUart3(void)
 {
     char byteRead;
-    while (Cb_get(&uart3ReadBuffer, (void*)&byteRead) == 0)
+    while (Cb_get(&uart3ReadBuffer, (void*)&byteRead) == (int8)(0))
         ;
-    while (Cb_get(&uart3WriteBuffer, (void*)&byteRead) == 0)
+    while (Cb_get(&uart3WriteBuffer, (void*)&byteRead) == (int8)(0))
         ;
 }
 

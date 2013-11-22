@@ -24,12 +24,6 @@ typedef enum {
     Led_LowActive_No = 0u
 } Led_LowActive;
 
-typedef struct {
-    uint8 port;
-    uint8 pin;
-    bool  lowActive;
-} LedConfig;
-
 typedef enum {
     Led1 = 0u,
     Led2 = 1u,
@@ -43,9 +37,14 @@ typedef enum {
     Led10 = 9u
 } Led;
 
+/** Initializes one LED
+ *  @param port Port of the LED
+ *  @param pin  Pin of the LED
+ *  @param lowActive Is the LED low active or not?
+ */
 void Led_initialize(uint8 port, uint8 pin, Led_LowActive lowActive);
 
-/** Initializes the Leds. Per default red and green Leds will be enabled. */
+/** Initializes the Leds. Per default red and green Leds will be enabled. Only relevant for the eStick2*/
 uint8 initializeLeds(void);
 /** Enables or disables the green Leds if possible.
  *  @param enabled

@@ -56,7 +56,7 @@
 #include <uartDriver.h>
 #include <circularbuffer.h>
 #include <types.h>
-#include <format.h>
+#include <xprintf.h>
 
 typedef enum {
     Uart0 = 0u,
@@ -99,7 +99,7 @@ int8 Uart_getchar(Uart uart, char* c);
  *  @param s Pointer to the formated string
  *  @param n Bytes to write
  */
-void * Uart_putat( void * ap, const char *s, size_t n );
+void Uart_putat( void* ptr, const char s );
 
 /** Custom printf function for UART.
  *  @param uart The UART to output data to.
@@ -107,7 +107,7 @@ void * Uart_putat( void * ap, const char *s, size_t n );
  *  @param ... Formatting parameters.
  *  @return Returns bytes send to the UART
  */
-int32 Uart_printf(Uart uart, char* args, ...);
+void Uart_printf(Uart uart, char* args, ...);
 
 /** Cleans in and output buffers a UART.
  *  @param uart The UART to output data to. 

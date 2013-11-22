@@ -89,7 +89,7 @@ int32 Iap_readVersion(void);
 /** Reads the id of the IAP code from the flash memory.
  * @return Id
  */
-int32 Iap_readId(void);
+uint32 Iap_readId(void);
 
 /** Work in progress */
 void  Iap_flashFirmware(const void* data, uint32 size);

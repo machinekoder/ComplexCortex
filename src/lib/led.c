@@ -1,5 +1,11 @@
 #include "led.h"
 
+typedef struct {
+    uint8 port;
+    uint8 pin;
+    bool  lowActive;
+} LedConfig;
+
 LedConfig leds[MAXLEDS];
 
 uint8 ledCount = 0u;
