@@ -14,7 +14,7 @@ void Pin_setFunction(uint8 port, uint8 pin, Pin_Function function)
              break;
         case Pin_Function_ThirdAlternate: functionBits = PINCON_THIRD_ALTERNATE_FUNCTION;
              break;
-        default: break;
+        default: return;
     }
     
     switch (port)
