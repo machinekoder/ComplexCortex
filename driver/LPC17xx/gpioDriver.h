@@ -30,7 +30,7 @@
 #define GPIO3_CLEAR(pin)                LPC_GPIO3->FIOCLR |= (1 << pin)
 #define GPIO4_CLEAR(pin)                LPC_GPIO4->FIOCLR |= (1 << pin)
 
-#define GPIO0_INT_PIN_COUNT             21
+#define GPIO0_INT_PIN_COUNT             31
 #define GPIO2_INT_PIN_COUNT             14
 
 #define GPIO_IRQHANDLER()               EINT3_IRQHandler()

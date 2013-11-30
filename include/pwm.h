@@ -32,15 +32,15 @@ int8 Pwm_initialize(uint32 freq,float duty, uint8 ch);
 /** Startes the PWM mode and the counter.
  *@param ch Says which channel(1-5) should be taken.
  */
-inline void Pwm_start(uint8 ch);
+void Pwm_start(uint8 ch);
 /** Stop the PWM and set signal to 0.
  *@param ch Says which channel(1-5) should be taken.
  */
-inline void Pwm_stop(uint8 ch);
+void Pwm_stop(uint8 ch);
 /** Togles the signal-output.
  *@param ch Says which channel(1-5) should be taken.
  */
-inline void Pwm_toggle(uint8 ch);
+void Pwm_toggle(uint8 ch);
 
 /**
  * @}

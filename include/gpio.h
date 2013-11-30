@@ -39,34 +39,34 @@ typedef struct {
  *  @param pin Pin number.
  *  @param direction Input or output.
  */
-inline void Gpio_setDirection(uint8 port, uint8 pin, Gpio_Direction direction);
+void Gpio_setDirection(uint8 port, uint8 pin, Gpio_Direction direction);
 /** Reads data from the  GPIO pin
  *  @param port Port of the pin.
  *  @param pin Pin number.
  *  @return Value that has been read from the pin.
  */
-inline uint8 Gpio_read(uint8 port, uint8 pin);
+uint8 Gpio_read(uint8 port, uint8 pin);
 /** Write data to the GPIO pin
  *  @param port Port of the pin.
  *  @param pin Pin number.
  *  @param value Value that should be written to the pin.
  */
-inline void Gpio_write(uint8 port, uint8 pin, uint8 value);
+void Gpio_write(uint8 port, uint8 pin, uint8 value);
 /** Set the GPIO pin
  *  @param port Port of the pin.
  *  @param pin Pin number.
  */
-inline void Gpio_set(uint8 port, uint8 pin);
+void Gpio_set(uint8 port, uint8 pin);
 /** Clear the GPIO pin
  *  @param port Port of the pin.
  *  @param pin Pin number.
  */
-inline void Gpio_clear(uint8 port, uint8 pin);
+void Gpio_clear(uint8 port, uint8 pin);
 /** Toggle the GPIO pin
  *  @param port Port of the pin.
  *  @param pin Pin number.
  */
-inline void Gpio_toggle(uint8 port, uint8 pin);
+void Gpio_toggle(uint8 port, uint8 pin);
 /** Enable interrupts on the GPIO pin
  *  @param port Port of the pin.
  *  @param pin Pin number.

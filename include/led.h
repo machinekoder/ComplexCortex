@@ -22,7 +22,7 @@
 typedef enum {
     Led_LowActive_Yes = 1u,
     Led_LowActive_No = 0u
-} Led_LowActive;
+} Led_LowActive;    /** Defines whether a LED is low active or not, used in Led_initialize function */
 
 typedef enum {
     Led1 = 0u,

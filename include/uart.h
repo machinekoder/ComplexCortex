@@ -90,7 +90,7 @@ int8 Uart_writeData(Uart uart, void *data, uint32 length);
 /** Function to get a character from UART.
   *  @param uart The UART to read data from.
   *  @param c Pointer to the received character.
-  *  @return 0 if successful -1 if nothing to reading
+  *  @return 0 if successful -1 if nothing to read
  */
 int8 Uart_getchar(Uart uart, char* c);
 

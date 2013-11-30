@@ -39,7 +39,7 @@ enum IapCommandCodes{
 
 typedef void (*iapEntry_t)(uint32 [], uint32 []);
 
-iapEntry_t iapEntry = (iapEntry_t)IAP_LOCATION;
+static iapEntry_t iapEntry = (iapEntry_t)IAP_LOCATION;
 
 uint32 Iap_readId(void)
 {
