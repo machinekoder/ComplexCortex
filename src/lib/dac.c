@@ -18,6 +18,6 @@ void Dac_setValue(uint16 value)
 
 void Dac_setVolt(uint16 mV)
 {
-    Dac_setValue((uint16)((mV-VREFN)/(VREFP-VREFN))*DAC_STEPS);
+    Dac_setValue((uint16)((((uint32)mV-VREFN)*DAC_STEPS)/(VREFP-VREFN)));
     return;
 }

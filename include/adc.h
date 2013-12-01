@@ -24,7 +24,8 @@
  *  Libraries that implement useful functions not using any specific hardware
  */
 /** @defgroup ADC ADC (Analog to Digital Converter)
- * @ingroup Peripheral
+ *  @ingroup Peripheral
+ *  Include adc.h to use the ADC library.
  * @{
  */
 #pragma once
@@ -51,7 +52,7 @@ typedef enum {
 /** Initializes the ADC
  *  @param clk Clock the ADC should be refreshed with in Hz.
  *  @param pin Pin the ADC should read from.
- *  @param burstMode If 1 the ADC runs in burst mode, continuously refreshing its data.
+ *  @param burstMode If 1 the ADC runs in burst mode it is continuously refreshing its data.
  *  @return Return 0 if successful, -1 if not.
  */
 int8 Adc_initialize(uint32 clk, Adc_Pin pin, Adc_BurstMode burstMode);
