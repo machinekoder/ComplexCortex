@@ -6,9 +6,8 @@ typedef struct {
     bool  lowActive;
 } LedConfig;
 
-LedConfig leds[MAXLEDS];
-
-uint8 ledCount = 0u;
+static LedConfig leds[MAXLEDS];
+static uint8 ledCount = 0u;
 
 void Led_initialize(uint8 port, uint8 pin, Led_LowActive lowActive)
 {

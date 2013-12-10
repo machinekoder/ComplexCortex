@@ -7,8 +7,8 @@ typedef struct {
     uint8  type;
 } SwitchConfig;
 
-volatile SwitchConfig   switches[SWITCH_MAX_COUNT];
-volatile uint8          switchCount = 0u;
+static volatile SwitchConfig   switches[SWITCH_MAX_COUNT];
+static volatile uint8          switchCount = 0u;
 
 void Switch_initialize(Switch id, uint8 port, uint8 pin, Switch_Type type, Pin_Mode pinMode, Pin_OpenDrain openDrain)
 {

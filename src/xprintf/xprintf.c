@@ -236,7 +236,7 @@ void xfprintf (
     xvprintf(ptr, fmt, arp);
     va_end(arp);
 
-    
+    xfunc_out = pf;
 }
 
 void xformat (

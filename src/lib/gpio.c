@@ -1,7 +1,7 @@
 #include "gpio.h"
 
-void (* functionPointers0[GPIO0_INT_PIN_COUNT])(void);
-void (* functionPointers2[GPIO2_INT_PIN_COUNT])(void);
+static void (* functionPointers0[GPIO0_INT_PIN_COUNT])(void);
+static void (* functionPointers2[GPIO2_INT_PIN_COUNT])(void);
 
 inline void Gpio_setDirection(uint8 port, uint8 pin, Gpio_Direction direction)
 {

@@ -1,9 +1,9 @@
 #include "adc.h"
 
-volatile uint8 adcBurstEnabled  = 0u;
-volatile uint8 adcPin           = 0u;
-volatile uint16 adcValue        = 0u;
-volatile uint8 adcIntDone       = 0u;
+static uint8 adcBurstEnabled        = 0u;
+static uint8 adcPin                 = 0u;
+static volatile uint16 adcValue     = 0u;
+static volatile uint8 adcIntDone    = 0u;
 
 int8 Adc_initialize(uint32 clk, Adc_Pin pin, Adc_BurstMode burstMode)
 {

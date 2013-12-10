@@ -1,7 +1,7 @@
 #include "button.h"
 
-CircularBuffer buttonBuffer;
-volatile ButtonValue buttonBufferData[BUTTON_BUFFER_SIZE];
+static CircularBuffer buttonBuffer;
+static volatile ButtonValue buttonBufferData[BUTTON_BUFFER_SIZE];
 
 typedef struct {
     uint8 id;
@@ -11,11 +11,11 @@ typedef struct {
     uint8 type;
 } ButtonConfig;
 
-volatile ButtonConfig  buttons[BUTTON_MAX_COUNT];
-volatile ButtonValue val[BUTTON_MAX_COUNT];
-volatile uint8   buttonCount = 0u;
+static volatile ButtonConfig    buttons[BUTTON_MAX_COUNT];
+static volatile ButtonValue     val[BUTTON_MAX_COUNT];
+static volatile uint8           buttonCount = 0u;
 
-volatile uint32 maxunset;
+static volatile uint32 maxunset;
 
 /** reads the button values
  */
