@@ -1,20 +1,20 @@
 #include "ssp.h"
 
-volatile Ssp_Mode ssp0_masterSlave;
-volatile Ssp_Loopback ssp0_loopbackMode;
-volatile Ssp_Mode ssp1_masterSlave;
-volatile Ssp_Loopback ssp1_loopbackMode;
+static volatile Ssp_Mode ssp0_masterSlave;
+static volatile Ssp_Loopback ssp0_loopbackMode;
+static volatile Ssp_Mode ssp1_masterSlave;
+static volatile Ssp_Loopback ssp1_loopbackMode;
 
-volatile Gpio_Pair ssp0_selPins[SSP_MAX_SEL_PINS];
-volatile Gpio_Pair ssp1_selPins[SSP_MAX_SEL_PINS];
+static volatile Gpio_Pair ssp0_selPins[SSP_MAX_SEL_PINS];
+static volatile Gpio_Pair ssp1_selPins[SSP_MAX_SEL_PINS];
 
-volatile uint32 ssp0_interruptOverRunStat = 0u;
-volatile uint32 ssp0_interruptRxTimeoutStat = 0u;
-volatile uint32 ssp0_interruptRxStat = 0u;
+static volatile uint32 ssp0_interruptOverRunStat = 0u;
+static volatile uint32 ssp0_interruptRxTimeoutStat = 0u;
+static volatile uint32 ssp0_interruptRxStat = 0u;
 
-volatile uint32 ssp1_interruptOverRunStat = 0u;
-volatile uint32 ssp1_interruptRxTimeoutStat = 0u;
-volatile uint32 ssp1_interruptRxStat = 0u;
+static volatile uint32 ssp1_interruptOverRunStat = 0u;
+static volatile uint32 ssp1_interruptRxTimeoutStat = 0u;
+static volatile uint32 ssp1_interruptRxStat = 0u;
 
 void Ssp_initialize(Ssp ssp,
                     uint32 baudrate,

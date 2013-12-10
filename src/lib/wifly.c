@@ -14,20 +14,20 @@
 #define WIFLY_RESPONSE_MATCH_TIMEOUT            5000u
 #define WIFLY_RESPONSE_WAIT_TIMEOUT             2u
 
-char commChar = '$';
-char commCloseString[35u];
-char commOpenString[35u];
-char commRemoteString[35u];
-char wiFlyVersion[WIFLY_VERSION_LENGTH + 3u];    // <,>, and \0
+static char commChar = '$';
+static char commCloseString[35u];
+static char commOpenString[35u];
+static char commRemoteString[35u];
+static char wiFlyVersion[WIFLY_VERSION_LENGTH + 3u];    // <,>, and \0
 
-char commandBuffer[WIFLY_COMMAND_BUFFER_SIZE];
-char responseBuffer[WIFLY_RESPONSE_BUFFER_SIZE];
-uint16 responseBufferPos;
-Uart wiflyUart;
+static char commandBuffer[WIFLY_COMMAND_BUFFER_SIZE];
+static char responseBuffer[WIFLY_RESPONSE_BUFFER_SIZE];
+static uint16 responseBufferPos;
+static Uart wiflyUart;
 
 void (* taskFunctionPointer)(char *);
 
-WiFly_State wiFlyState = WiFly_State_Disconnected;
+static WiFly_State wiFlyState = WiFly_State_Disconnected;
 
 int8 findInResponse(const char* toMatch, uint32 timeout);
 int8 responseMatched(const char* toMatch);

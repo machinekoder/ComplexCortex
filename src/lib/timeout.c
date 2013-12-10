@@ -3,7 +3,7 @@
 #define TIMEOUT_TIMER_KHZ       1u
 #define TIMEOUT_TIMER_INTERVAL  ~(uint32)0u
 
-volatile uint8 globalTimerId;
+static volatile uint8 globalTimerId;
 
 int8 Timeout_initialize(Timer timerId)
 {

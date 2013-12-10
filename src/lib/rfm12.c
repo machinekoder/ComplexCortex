@@ -5,10 +5,10 @@
 //#define RFM12_GETCHAR              // getcharSSP0
 #define RFM12_INIT                  initializeSsp1
 
-volatile Rfm12_Mode receiverSenderMode;
-volatile Ssp ssps[RFM12_MAX_COUNT];
-volatile Gpio_Pair dataPairs[RFM12_MAX_COUNT];
-volatile bool ookStatus[RFM12_MAX_COUNT];
+static volatile Rfm12_Mode receiverSenderMode;
+static volatile Ssp ssps[RFM12_MAX_COUNT];
+static volatile Gpio_Pair dataPairs[RFM12_MAX_COUNT];
+static volatile bool ookStatus[RFM12_MAX_COUNT];
 
 int8 Rfm12_initialize(Rfm12 id, Ssp ssp, Gpio_Pair selPair, Gpio_Pair dataPair)
 {
