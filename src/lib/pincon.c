@@ -51,7 +51,7 @@ void Pin_setMode(uint8 port, uint8 pin, Pin_Mode mode)
              break;
         case Pin_Mode_PullDown: functionBits = PINCON_MODE_PULL_DOWN;
              break;
-        default: break;
+        default: return;    // if Pin mode is not supported abort
     }
     
     switch (port)
