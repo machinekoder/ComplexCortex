@@ -7,10 +7,16 @@ typedef struct {
     uint8  type;
 } SwitchConfig;
 
-static volatile SwitchConfig   switches[SWITCH_MAX_COUNT];
-static volatile uint8          switchCount = 0u;
+static SwitchConfig   switches[SWITCH_MAX_COUNT];
+static uint8          switchCount;
 
-void Switch_initialize(Switch id, uint8 port, uint8 pin, Switch_Type type, Pin_Mode pinMode, Pin_OpenDrain openDrain)
+void Switch_initialize(void)
+{
+    /* init variables */
+    switchCount = 0u;
+}
+
+void Switch_initializeSwitch(Switch id, uint8 port, uint8 pin, Switch_Type type, Pin_Mode pinMode, Pin_OpenDrain openDrain)
 {
     Gpio_setDirection(port, pin, Gpio_Direction_Output);
     Pin_setMode(port, pin, pinMode);

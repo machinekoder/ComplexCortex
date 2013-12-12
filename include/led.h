@@ -13,7 +13,7 @@
 /* With these values you can modify the behavior of the Led functions */
 #define LED_BLINK_TIME 100u
 #define LED_RUNNING_TIME 30u
-#define MAXLEDS 10u
+#define LED_MAX_COUNT 10u
 
 #include <types.h>
 #include <timer.h>
@@ -37,12 +37,17 @@ typedef enum {
     Led10 = 9u
 } Led;
 
+/** Initializes the LED library
+ *  Must be executed before the Led_initializeLed functions
+ */
+void Led_initialize(void);
+
 /** Initializes one LED
  *  @param port Port of the LED
  *  @param pin  Pin of the LED
  *  @param lowActive Is the LED low active or not?
  */
-void Led_initialize(uint8 port, uint8 pin, Led_LowActive lowActive);
+void Led_initializeLed(uint8 id, uint8 port, uint8 pin, Led_LowActive lowActive);
 
 /** Initializes the Leds. Per default red and green Leds will be enabled. Only relevant for the eStick2*/
 uint8 initializeLeds(void);

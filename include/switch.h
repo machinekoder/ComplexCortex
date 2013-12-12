@@ -10,7 +10,9 @@
  */
 #pragma once
 
+#ifndef SWITCH_MAX_COUNT
 #define SWITCH_MAX_COUNT 10u
+#endif
 
 #include <types.h>
 #include <gpio.h>
@@ -34,6 +36,11 @@ typedef enum {
     Switch10 = 9u
 } Switch;
 
+/** Initializes the Switch library
+ *  Must be executed before the Switch_initializeSwitch functions
+ */
+void Switch_initialize(void);
+
 /** Initializes one switch
  *  @param id           Stands for the name of the Switches
  *  @param port         Port of the switch
@@ -42,7 +49,7 @@ typedef enum {
  *  @param pinMode      The mode the pin should be initialized in.
  *  @param openDrain    Defines wether the switch should be used in OpenDrain mode or not.
  */
-void Switch_initialize(Switch id, uint8 port, uint8 pin, Switch_Type type, Pin_Mode pinMode, Pin_OpenDrain openDrain);
+void Switch_initializeSwitch(Switch id, uint8 port, uint8 pin, Switch_Type type, Pin_Mode pinMode, Pin_OpenDrain openDrain);
 
 /** Turns a switch on
  *  @param id Id of the Switch

@@ -16,13 +16,14 @@
 #ifndef _STRFUNC
 #define _STRFUNC
 
-#define _USE_XFUNC_OUT	1	/* 1: Use output functions */
-#define	_CR_CRLF		1	/* 1: Convert \n ==> \r\n in the output char */
+#define _USE_XFUNC_OUT  1   /* 1: Use output functions */
+#define _CR_CRLF        1   /* 1: Convert \n ==> \r\n in the output char */
 
-#define _USE_XFUNC_IN	0	/* 1: Use input function */
-#define	_LINE_ECHO		1	/* 1: Echo back input chars in xgets function */
+#define _USE_XFUNC_IN   1   /* 1: Use input function */
+#define _LINE_ECHO      1   /* 1: Echo back input chars in xgets function */
 
 #include <stdarg.h>
+#include <types.h>
 
 #if _USE_XFUNC_OUT
 #define xdev_out(func) xfunc_out = (void(*)(unsigned char))(func)
@@ -80,7 +81,7 @@ void xformat (void (*func)(void*, char), void* ptr, const char* fmt, va_list arg
  *  @param len  Number of items to be dumped
  *  @param width Size of the items (DF_CHAR, DF_SHORT, DF_LONG)
  */
-void put_dump (void* ptr, const void* buff, long unsigned int addr, int len, int width);
+void put_dump (void* ptr, const void* buff, uint64 addr, uint32 len, uint32 width);
 #define DW_CHAR		sizeof(char)
 #define DW_SHORT	sizeof(short)
 #define DW_LONG		sizeof(long)
@@ -89,9 +90,10 @@ void put_dump (void* ptr, const void* buff, long unsigned int addr, int len, int
 #if _USE_XFUNC_IN
 #define xdev_in(func) xfunc_in = (unsigned char(*)(void))(func)
 extern unsigned char (*xfunc_in)(void);
-int xgets (char* buff, int len);
-int xfgets (unsigned char (*func)(void), char* buff, int len);
-int xatoi (char** str, long* res);
+
+uint8 xgets (char* buff, uint32 len);
+uint8 xfgets (uint8 (*func)(void), char* buff, uint32 len);
+uint8 xatoi (char** str, int64* res);
 #endif
 
 #endif

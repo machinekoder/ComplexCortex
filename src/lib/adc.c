@@ -1,12 +1,17 @@
 #include "adc.h"
 
-static uint8 adcBurstEnabled        = 0u;
-static uint8 adcPin                 = 0u;
-static volatile uint16 adcValue     = 0u;
-static volatile uint8 adcIntDone    = 0u;
+static uint8 adcBurstEnabled;
+static uint8 adcPin;
+static volatile uint16 adcValue;
+static volatile uint8 adcIntDone;
 
 int8 Adc_initialize(uint32 clk, Adc_Pin pin, Adc_BurstMode burstMode)
 {
+    adcIntDone = 0u;
+    adcValue = 0u;
+    adcPin = pin;
+    adcBurstEnabled = burstMode;
+    
     ADC_ENABLE_POWER();           // Power on the ADC
     ADC_SET_CORE_CLK();           // Set the ADC core clock
     
@@ -39,14 +44,12 @@ int8 Adc_initialize(uint32 clk, Adc_Pin pin, Adc_BurstMode burstMode)
                 break;
         default: break;
     }
-    adcPin = pin;
     
     ADC_SET_CLK(clk);           // Set ADC clock
     ADC_CONFIGURE();            // Configure ADC specific settings
     ADC_ENABLE();               // Enable the ADC
     
-    adcBurstEnabled = burstMode;
-    if (burstMode == Adc_BurstMode_Enabled)
+    if (adcBurstEnabled == Adc_BurstMode_Enabled)
     {
         ADC_SET_BURSTMODE();
     }

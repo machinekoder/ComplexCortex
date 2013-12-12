@@ -1,6 +1,6 @@
 #include "timer.h"
 
-static void ((* functionPointer[4u])(void)) = {NULL,NULL,NULL,NULL};
+static void ((* functionPointer[4u])(void));
 
 int8 initializeTimer0(uint32 khz, uint32 intervalUs);
 int8 initializeTimer1(uint32 khz, uint32 intervalUs);

@@ -97,75 +97,75 @@ void xvprintf (
     va_list arp
 )
 {
-    unsigned int r, i, j, w, f;
-    unsigned long v;
-    char s[16], c, d, *p;
+    uint32 r, i, j, w, f;
+    uint64 v;
+    char s[16u], c, d, *p;
 
 
-	for (;;) {
-		c = *fmt++;					/* Get a char */
-		if (!c) break;				/* End of format? */
-		if (c != '%') {				/* Pass through it if not a % sequense */
-			xputc(ptr, c); continue;
-		}
-		f = 0;
-		c = *fmt++;					/* Get first char of the sequense */
-		if (c == '0') {				/* Flag: '0' padded */
-			f = 1; c = *fmt++;
-		} else {
-			if (c == '-') {			/* Flag: left justified */
-				f = 2; c = *fmt++;
-			}
-		}
-		for (w = 0; c >= '0' && c <= '9'; c = *fmt++)	/* Minimum width */
-			w = w * 10 + c - '0';
-		if (c == 'l' || c == 'L') {	/* Prefix: Size is long int */
-			f |= 4; c = *fmt++;
-		}
-		if (!c) break;				/* End of format? */
-		d = c;
-		if (d >= 'a') d -= 0x20;
-		switch (d) {				/* Type is... */
-		case 'S' :					/* String */
-			p = va_arg(arp, char*);
-			for (j = 0; p[j]; j++) ;
-			while (!(f & 2) && j++ < w) xputc(ptr, ' ');
-			xputs(ptr, p);
-			while (j++ < w) xputc(ptr, ' ');
-			continue;
-		case 'C' :					/* Character */
-			xputc(ptr, (char)va_arg(arp, int)); continue;
-		case 'B' :					/* Binary */
-			r = 2; break;
-		case 'O' :					/* Octal */
-			r = 8; break;
-		case 'D' :					/* Signed decimal */
-		case 'U' :					/* Unsigned decimal */
-			r = 10; break;
-		case 'X' :					/* Hexdecimal */
-			r = 16; break;
-		default:					/* Unknown type (passthrough) */
-			xputc(ptr, c); continue;
-		}
+    for (;;) {
+        c = *fmt++;                 /* Get a char */
+        if (!c) break;              /* End of format? */
+        if (c != '%') {             /* Pass through it if not a % sequense */
+            xputc(ptr, c); continue;
+        }
+        f = 0u;
+        c = *fmt++;                 /* Get first char of the sequense */
+        if (c == '0') {             /* Flag: '0' padded */
+            f = 1u; c = *fmt++;
+        } else {
+            if (c == '-') {         /* Flag: left justified */
+                f = 2u; c = *fmt++;
+            }
+        }
+        for (w = 0u; c >= '0' && c <= '9'; c = *fmt++)  /* Minimum width */
+            w = w * 10u + c - '0';
+        if (c == 'l' || c == 'L') { /* Prefix: Size is long int */
+            f |= 4u; c = *fmt++;
+        }
+        if (!c) break;              /* End of format? */
+        d = c;
+        if (d >= 'a') d -= 0x20;
+        switch (d) {                /* Type is... */
+        case 'S' :                  /* String */
+            p = va_arg(arp, char*);
+            for (j = 0u; p[j]; j++) ;
+            while (!(f & 2u) && j++ < w) xputc(ptr, ' ');
+            xputs(ptr, p);
+            while (j++ < w) xputc(ptr, ' ');
+            continue;
+        case 'C' :                  /* Character */
+            xputc(ptr, (char)va_arg(arp, int)); continue;
+        case 'B' :                  /* Binary */
+            r = 2u; break;
+        case 'O' :                  /* Octal */
+            r = 8u; break;
+        case 'D' :                  /* Signed decimal */
+        case 'U' :                  /* Unsigned decimal */
+            r = 10u; break;
+        case 'X' :                  /* Hexdecimal */
+            r = 16u; break;
+        default:                    /* Unknown type (passthrough) */
+            xputc(ptr, c); continue;
+        }
 
-		/* Get an argument and put it in numeral */
-		v = (f & 4) ? va_arg(arp, long) : ((d == 'D') ? (long)va_arg(arp, int) : (long)va_arg(arp, unsigned int));
-		if (d == 'D' && (v & 0x80000000)) {
-			v = 0 - v;
-			f |= 8;
-		}
-		i = 0;
-		do {
-			d = (char)(v % r); v /= r;
-			if (d > 9) d += (c == 'x') ? 0x27 : 0x07;
-			s[i++] = d + '0';
-		} while (v && i < sizeof(s));
-		if (f & 8) s[i++] = '-';
-		j = i; d = (f & 1) ? '0' : ' ';
-		while (!(f & 2) && j++ < w) xputc(ptr, d);
-		do xputc(ptr, s[--i]); while(i);
-		while (j++ < w) xputc(ptr, ' ');
-	}
+        /* Get an argument and put it in numeral */
+        v = (f & 4u) ? va_arg(arp, long) : ((d == 'D') ? (long)va_arg(arp, int) : (long)va_arg(arp, unsigned int));
+        if (d == 'D' && (v & 0x80000000u)) {
+            v = 0u - v;
+            f |= 8u;
+        }
+        i = 0u;
+        do {
+            d = (char)(v % r); v /= r;
+            if (d > 9) d += (c == 'x') ? 0x27 : 0x07;
+            s[i++] = d + '0';
+        } while (v && i < sizeof(s));
+        if (f & 8u) s[i++] = '-';
+        j = i; d = (f & 1u) ? '0' : ' ';
+        while (!(f & 2u) && j++ < w) xputc(ptr, d);
+        do xputc(ptr, s[--i]); while(i);
+        while (j++ < w) xputc(ptr, ' ');
+    }
 }
 
 void xprintf (
@@ -263,43 +263,43 @@ void xformat (
 void put_dump (
     void* ptr,
     const void* buff,
-    unsigned long addr,
-    int len,
-    int width
+    uint64 addr,
+    uint32 len,
+    uint32 width
 )
 {
-	int i;
-	const unsigned char *bp;
-	const unsigned short *sp;
-	const unsigned long *lp;
+    uint32 i;
+    const uint8 *bp;
+    const uint16 *sp;
+    const uint64 *lp;
 
 
-	xprintf(ptr, "%08lX ", addr);		/* address */
+    xprintf(ptr, "%08lX ", addr);       /* address */
 
-	switch (width) {
-	case DW_CHAR:
-		bp = buff;
-		for (i = 0; i < len; i++)		/* Hexdecimal dump */
-			xprintf(ptr, " %02X", bp[i]);
-		xputc(ptr, ' ');
-		for (i = 0; i < len; i++)		/* ASCII dump */
-			xputc(ptr, (bp[i] >= ' ' && bp[i] <= '~') ? bp[i] : '.');
-		break;
-	case DW_SHORT:
-		sp = buff;
-		do								/* Hexdecimal dump */
-			xprintf(ptr, " %04X", *sp++);
-		while (--len);
-		break;
-	case DW_LONG:
-		lp = buff;
-		do								/* Hexdecimal dump */
-			xprintf(ptr, " %08LX", *lp++);
-		while (--len);
-		break;
-	}
+    switch (width) {
+    case DW_CHAR:
+        bp = buff;
+        for (i = 0u; i < len; i++)      /* Hexdecimal dump */
+            xprintf(ptr, " %02X", bp[i]);
+        xputc(ptr, ' ');
+        for (i = 0u; i < len; i++)      /* ASCII dump */
+            xputc(ptr, (bp[i] >= ' ' && bp[i] <= '~') ? bp[i] : '.');
+        break;
+    case DW_SHORT:
+        sp = buff;
+        do                              /* Hexdecimal dump */
+            xprintf(ptr, " %04X", *sp++);
+        while (--len);
+        break;
+    case DW_LONG:
+        lp = buff;
+        do                              /* Hexdecimal dump */
+            xprintf(ptr, " %08LX", *lp++);
+        while (--len);
+        break;
+    }
 
-	xputc(ptr, '\n');
+    xputc(ptr, '\n');
 }
 
 #endif /* _USE_XFUNC_OUT */
@@ -307,59 +307,60 @@ void put_dump (
 
 
 #if _USE_XFUNC_IN
-unsigned char (*xfunc_in)(void);	/* Pointer to the input stream */
+uint8 (*xfunc_in)(void);    /* Pointer to the input stream */
 
 /*----------------------------------------------*/
 /* Get a line from the input                    */
 /*----------------------------------------------*/
 
-int xgets (		/* 0:End of stream, 1:A line arrived */
-    char* buff,	/* Pointer to the buffer */
-    int len		/* Buffer length */
+uint8 xgets (     /* 0:End of stream, 1:A line arrived */
+    char* buff, /* Pointer to the buffer */
+    uint32 len     /* Buffer length */
 )
 {
-	int c, i;
+    char c;
+    uint8 i;
 
 
-	if (!xfunc_in) return 0;		/* No input function specified */
+    if (!xfunc_in) return 0u;       /* No input function specified */
 
-	i = 0;
-	for (;;) {
-		c = xfunc_in();				/* Get a char from the incoming stream */
-		if (!c) return 0;			/* End of stream? */
-		if (c == '\r') break;		/* End of line? */
-		if (c == '\b' && i) {		/* Back space? */
-			i--;
-			if (_LINE_ECHO) xputc(c);
-			continue;
-		}
-		if (c >= ' ' && i < len - 1) {	/* Visible chars */
-			buff[i++] = c;
-			if (_LINE_ECHO) xputc(c);
-		}
-	}
-	buff[i] = 0;	/* Terminate with a \0 */
-	if (_LINE_ECHO) xputc('\n');
-	return 1;
+    i = 0;
+    for (;;) {
+        c = xfunc_in();             /* Get a char from the incoming stream */
+        if (!c) return 0u;          /* End of stream? */
+        if (c == '\r') break;       /* End of line? */
+        if (c == '\b' && i) {       /* Back space? */
+            i--;
+            if (_LINE_ECHO) xputc(NULL, c);
+            continue;
+        }
+        if (c >= ' ' && i < len - 1u) {  /* Visible chars */
+            buff[i++] = c;
+            if (_LINE_ECHO) xputc(NULL, c);
+        }
+    }
+    buff[i] = 0;    /* Terminate with a \0 */
+    if (_LINE_ECHO) xputc(NULL, '\n');
+    return 1u;
 }
 
 
-int xfgets (	/* 0:End of stream, 1:A line arrived */
-    unsigned char (*func)(void),	/* Pointer to the input stream function */
-    char* buff,	/* Pointer to the buffer */
-    int len		/* Buffer length */
+uint8 xfgets (    /* 0:End of stream, 1:A line arrived */
+    uint8 (*func)(void),    /* Pointer to the input stream function */
+    char* buff,     /* Pointer to the buffer */
+    uint32 len      /* Buffer length */
 )
 {
-	unsigned char (*pf)(void);
-	int n;
+    uint8 (*pf)(void);
+    uint8 n;
 
 
-	pf = xfunc_in;			/* Save current input device */
-	xfunc_in = func;		/* Switch input to specified device */
-	n = xgets(buff, len);	/* Get a line */
-	xfunc_in = pf;			/* Restore input device */
+    pf = xfunc_in;          /* Save current input device */
+    xfunc_in = func;        /* Switch input to specified device */
+    n = xgets(buff, len);   /* Get a line */
+    xfunc_in = pf;          /* Restore input device */
 
-	return n;
+    return n;
 }
 
 
@@ -375,59 +376,59 @@ int xfgets (	/* 0:End of stream, 1:A line arrived */
                                   ^ 6th call fails and returns 0
 */
 
-int xatoi (			/* 0:Failed, 1:Successful */
-    char **str,		/* Pointer to pointer to the string */
-    long *res		/* Pointer to the valiable to store the value */
+uint8 xatoi (       /* 0:Failed, 1:Successful */
+    char **str,     /* Pointer to pointer to the string */
+    int64 *res       /* Pointer to the valiable to store the value */
 )
 {
-	unsigned long val;
-	unsigned char c, r, s = 0;
+    uint64 val;
+    uint8 c, r, s = 0u;
 
 
-	*res = 0;
+    *res = 0;
 
-	while ((c = **str) == ' ') (*str)++;	/* Skip leading spaces */
+    while ((c = **str) == ' ') (*str)++;    /* Skip leading spaces */
 
-	if (c == '-') {		/* negative? */
-		s = 1;
-		c = *(++(*str));
-	}
+    if (c == '-') {     /* negative? */
+        s = 1u;
+        c = *(++(*str));
+    }
 
-	if (c == '0') {
-		c = *(++(*str));
-		switch (c) {
-		case 'x':		/* hexdecimal */
-			r = 16; c = *(++(*str));
-			break;
-		case 'b':		/* binary */
-			r = 2; c = *(++(*str));
-			break;
-		default:
-			if (c <= ' ') return 1;	/* single zero */
-			if (c < '0' || c > '9') return 0;	/* invalid char */
-			r = 8;		/* octal */
-		}
-	} else {
-		if (c < '0' || c > '9') return 0;	/* EOL or invalid char */
-		r = 10;			/* decimal */
-	}
+    if (c == '0') {
+        c = *(++(*str));
+        switch (c) {
+        case 'x':       /* hexdecimal */
+            r = 16u; c = *(++(*str));
+            break;
+        case 'b':       /* binary */
+            r = 2u; c = *(++(*str));
+            break;
+        default:
+            if (c <= ' ') return 1u;    /* single zero */
+            if (c < '0' || c > '9') return 0u;  /* invalid char */
+            r = 8u;     /* octal */
+        }
+    } else {
+        if (c < '0' || c > '9') return 0u;  /* EOL or invalid char */
+        r = 10u;        /* decimal */
+    }
 
-	val = 0;
-	while (c > ' ') {
-		if (c >= 'a') c -= 0x20;
-		c -= '0';
-		if (c >= 17) {
-			c -= 7;
-			if (c <= 9) return 0;	/* invalid char */
-		}
-		if (c >= r) return 0;		/* invalid char for current radix */
-		val = val * r + c;
-		c = *(++(*str));
-	}
-	if (s) val = 0 - val;			/* apply sign if needed */
+    val = 0u;
+    while (c > ' ') {
+        if (c >= 'a') c -= 0x20u;
+        c -= '0';
+        if (c >= 17u) {
+            c -= 7u;
+            if (c <= 9u) return 0u;  /* invalid char */
+        }
+        if (c >= r) return 0u;      /* invalid char for current radix */
+        val = val * r + c;
+        c = *(++(*str));
+    }
+    if (s) val = 0u - val;           /* apply sign if needed */
 
-	*res = val;
-	return 1;
+    *res = (int64)val;
+    return 1u;
 }
 
 #endif /* _USE_XFUNC_IN */

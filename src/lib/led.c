@@ -6,15 +6,22 @@ typedef struct {
     bool  lowActive;
 } LedConfig;
 
-static LedConfig leds[MAXLEDS];
-static uint8 ledCount = 0u;
+static LedConfig leds[LED_MAX_COUNT];
+static uint8 ledCount;
 
-void Led_initialize(uint8 port, uint8 pin, Led_LowActive lowActive)
+void Led_initialize(void)
+{
+    /* init variables */
+    ledCount = 0u;
+}
+
+void Led_initializeLed(uint8 id, uint8 port, uint8 pin, Led_LowActive lowActive)
 {
     Gpio_setDirection(port, pin, Gpio_Direction_Output);
-    leds[ledCount].port = port;
-    leds[ledCount].pin = pin;
-    leds[ledCount].lowActive = lowActive;
+    leds[id].port = port;
+    leds[id].pin = pin;
+    leds[id].lowActive = lowActive;
+    
     ledCount++;
 }
 

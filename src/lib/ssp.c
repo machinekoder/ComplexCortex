@@ -8,13 +8,13 @@ static volatile Ssp_Loopback ssp1_loopbackMode;
 static volatile Gpio_Pair ssp0_selPins[SSP_MAX_SEL_PINS];
 static volatile Gpio_Pair ssp1_selPins[SSP_MAX_SEL_PINS];
 
-static volatile uint32 ssp0_interruptOverRunStat = 0u;
-static volatile uint32 ssp0_interruptRxTimeoutStat = 0u;
-static volatile uint32 ssp0_interruptRxStat = 0u;
+static volatile uint32 ssp0_interruptOverRunStat;
+static volatile uint32 ssp0_interruptRxTimeoutStat;
+static volatile uint32 ssp0_interruptRxStat;
 
-static volatile uint32 ssp1_interruptOverRunStat = 0u;
-static volatile uint32 ssp1_interruptRxTimeoutStat = 0u;
-static volatile uint32 ssp1_interruptRxStat = 0u;
+static volatile uint32 ssp1_interruptOverRunStat;
+static volatile uint32 ssp1_interruptRxTimeoutStat;
+static volatile uint32 ssp1_interruptRxStat;
 
 void Ssp_initialize(Ssp ssp,
                     uint32 baudrate,
@@ -37,6 +37,11 @@ void Ssp_initialize(Ssp ssp,
    
    if (ssp == Ssp0)
    {
+       /* intialize variables */
+       ssp0_interruptOverRunStat = 0u;
+       ssp0_interruptRxTimeoutStat = 0u;
+       ssp0_interruptRxStat = 0u;
+       
         SSP0_ENABLE_POWER();
 
         cpsdvsr = 2u; 
@@ -152,6 +157,11 @@ void Ssp_initialize(Ssp ssp,
    }
    else if (ssp == Ssp1)
    {
+       /* intialize variables */
+       ssp1_interruptOverRunStat = 0u;
+       ssp1_interruptRxTimeoutStat = 0u;
+       ssp1_interruptRxStat = 0u;
+       
         SSP1_ENABLE_POWER();
    
         cpsdvsr = 2u;

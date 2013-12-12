@@ -5,7 +5,7 @@
 #define WIFLY_COMMAND_MODE_ENTER_RETRY_ATTEMPTS 5u
 #define WIFLY_COMMAND_MODE_GUARD_TIME           250u     // ms
 #define WIFLY_REBOOT_GUARD_TIME                 1000u
-#define WIFLY_COMMAND_SETTLE_TIME               20u
+#define WIFLY_COMMAND_SETTLE_TIME               30u
 #define WIFLY_VERSION_LENGTH                    4u      //e.g. 4.00
 #define WIFLY_SET_OK                            "AOK"
 #define WIFLY_COMMAND_BUFFER_SIZE               256u
@@ -13,8 +13,9 @@
 #define WIFLY_RESPONSE_TIMEOUT                  1000u
 #define WIFLY_RESPONSE_MATCH_TIMEOUT            5000u
 #define WIFLY_RESPONSE_WAIT_TIMEOUT             2u
+#define WIFLY_SOFTWARE_REBOOT_RETRY_ATTEMPTS    5u
 
-static char commChar = '$';
+static char commChar;
 static char commCloseString[35u];
 static char commOpenString[35u];
 static char commRemoteString[35u];
@@ -25,9 +26,9 @@ static char responseBuffer[WIFLY_RESPONSE_BUFFER_SIZE];
 static uint16 responseBufferPos;
 static Uart wiflyUart;
 
-void (* taskFunctionPointer)(char *);
+static void (* taskFunctionPointer)(char *);
 
-static WiFly_State wiFlyState = WiFly_State_Disconnected;
+static WiFly_State wiFlyState;
 
 int8 findInResponse(const char* toMatch, uint32 timeout);
 int8 responseMatched(const char* toMatch);
@@ -36,11 +37,15 @@ int8 setCommand(char *command);
 int8 getCommand(char* command);
 int8 otherCommand(char *command, char* awaitedResponse);
 
-void internalProcessTask(char* command);
+static void internalProcessTask(char* command);
 
 int8 WiFly_initialize(Uart uart, uint32 baudrate)
 {
     int8 returnValue;
+    
+    /* intialize variables */
+    commChar = '$';
+    wiFlyState = WiFly_State_Disconnected;
     
     returnValue = Uart_initialize(uart, baudrate);
     if (returnValue == (int8)(-1))          // 9600 Baud, 1 Stop bit, No parity, No Hardware flow control
@@ -71,8 +76,6 @@ int8 WiFly_initialize(Uart uart, uint32 baudrate)
     fileIoWiFlySaveDefault();
     actionWiFlyReboot();
     WIFLY_SET_BAUDRATE(baudrate);*/
-    
-    wiFlyState = WiFly_State_Disconnected;
     
     return (int8)(0);
 }
@@ -677,7 +680,7 @@ int8 WiFly_actionEnterCommandMode(uint8 isAfterReboot)
         Timer_delayMs(WIFLY_COMMAND_MODE_GUARD_TIME);
     
         Uart_flush(wiflyUart);
-        Uart_printf(wiflyUart, "$$$");//"%c%c%c",commChar,commChar,commChar);  // Print the command chars
+        Uart_printf(wiflyUart, "%c%c%c",commChar,commChar,commChar);  // Print the command chars
         
         Timer_delayMs(WIFLY_COMMAND_MODE_GUARD_TIME);
         
@@ -767,7 +770,6 @@ void WiFly_actionPing(char *parameters, uint16 num)
     Uart_printf(wiflyUart, "ping  %s %u\r", parameters, num);
 }
 
-#define WIFLY_SOFTWARE_REBOOT_RETRY_ATTEMPTS 5
 int8 WiFly_actionReboot()
 {
     uint8 retryCount;

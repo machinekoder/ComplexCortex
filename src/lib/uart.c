@@ -24,25 +24,25 @@ static char           uart3WriteBufferData[UART_WRITE_BUFFER_SIZE];
 #endif
 
 #if USE_UART_TASK
-char taskBuffer0[UART_TASK_BUFFER_SIZE];
-char taskBuffer1[UART_TASK_BUFFER_SIZE];
-char taskBuffer2[UART_TASK_BUFFER_SIZE];
-char taskBuffer3[UART_TASK_BUFFER_SIZE];
+static char taskBuffer0[UART_TASK_BUFFER_SIZE];
+static char taskBuffer1[UART_TASK_BUFFER_SIZE];
+static char taskBuffer2[UART_TASK_BUFFER_SIZE];
+static char taskBuffer3[UART_TASK_BUFFER_SIZE];
 
-uint16 taskBufferPos0 = 0u;
-uint16 taskBufferPos1 = 0u;
-uint16 taskBufferPos2 = 0u;
-uint16 taskBufferPos3 = 0u;
+static uint16 taskBufferPos0;
+static uint16 taskBufferPos1;
+static uint16 taskBufferPos2;
+static uint16 taskBufferPos3;
 
-void (* taskFunctionPointer0)(char *);
-void (* taskFunctionPointer1)(char *);
-void (* taskFunctionPointer2)(char *);
-void (* taskFunctionPointer3)(char *);
+static void (* taskFunctionPointer0)(char *);
+static void (* taskFunctionPointer1)(char *);
+static void (* taskFunctionPointer2)(char *);
+static void (* taskFunctionPointer3)(char *);
 
-void (* errorFunctionPointer0)(void);
-void (* errorFunctionPointer1)(void);
-void (* errorFunctionPointer2)(void);
-void (* errorFunctionPointer3)(void);
+static void (* errorFunctionPointer0)(void);
+static void (* errorFunctionPointer1)(void);
+static void (* errorFunctionPointer2)(void);
+static void (* errorFunctionPointer3)(void);
 #endif
 
 //char printfBuffer[UART_PRINTF_BUFFER_SIZE];
@@ -87,6 +87,7 @@ int8 initializeUart0(uint32 baudrate)
 #if (USE_UART_TASK == 1)
     taskFunctionPointer0 = NULL;
     errorFunctionPointer0 = NULL;
+    taskBufferPos0 = 0u;
 #endif
     
     UART0_POWER_ON();               // Turn on power to UART0
@@ -119,6 +120,7 @@ int8 initializeUart1(uint32 baudrate)
 #if (USE_UART_TASK == 1)
     taskFunctionPointer1 = NULL;
     errorFunctionPointer1 = NULL;
+    taskBufferPos1 = 0u;
 #endif
     
     UART1_POWER_ON();               // Turn on power to UART1
@@ -151,6 +153,7 @@ int8 initializeUart2(uint32 baudrate)
 #if (USE_UART_TASK == 1)
     taskFunctionPointer2 = NULL;
     errorFunctionPointer2 = NULL;
+    taskBufferPos2 = 0u;
 #endif
     
     UART2_POWER_ON();               // Turn on power to UART2
@@ -183,6 +186,7 @@ int8 initializeUart3(uint32 baudrate)
 #if (USE_UART_TASK == 1)
     taskFunctionPointer3 = NULL;
     errorFunctionPointer3 = NULL;
+    taskBufferPos3 = 0u;
 #endif
     
     UART3_POWER_ON();               // Turn on power to UART3
@@ -556,7 +560,7 @@ void Uart_printf(Uart uart, char *args, ...)
     va_list arg_ptr;
     
     va_start(arg_ptr,args);
-    xformat(Uart_putat, &uart, args, arg_ptr);
+    xformat(Uart_putat, (void*)(&uart), args, arg_ptr);
     va_end(arg_ptr);
 }
 

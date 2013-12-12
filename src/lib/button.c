@@ -13,7 +13,7 @@ typedef struct {
 
 static volatile ButtonConfig    buttons[BUTTON_MAX_COUNT];
 static volatile ButtonValue     val[BUTTON_MAX_COUNT];
-static volatile uint8           buttonCount = 0u;
+static volatile uint8           buttonCount;
 
 static volatile uint32 maxunset;
 
@@ -29,6 +29,8 @@ void putVal(uint8 i, uint8 pressed);
 
 int8 Button_initialize(uint32 khz, uint32 sampleInterval, uint32 timeoutInterval, Timer timer)
 {
+    buttonCount = 0u;
+    
     if (Cb_initialize(&buttonBuffer, BUTTON_BUFFER_SIZE, sizeof(ButtonValue), (void*)(&buttonBufferData)) == (int8)(-1))
         return (int8)(-1);
     
@@ -45,6 +47,8 @@ int8 Button_initialize(uint32 khz, uint32 sampleInterval, uint32 timeoutInterval
 
 int8 Button_initialize2(uint32 sampleInterval, uint32 timeoutInterval)
 {
+    buttonCount = 0u;
+    
     if (Cb_initialize(&buttonBuffer, BUTTON_BUFFER_SIZE, sizeof(ButtonValue), (void*)(&buttonBufferData)) == (int8)(-1))
         return (int8)(-1);
     
