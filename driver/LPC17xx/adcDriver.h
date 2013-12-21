@@ -52,8 +52,9 @@
 #define ADC_STOP()          LPC_ADC->ADCR &= ~(0x7 << 24)
 
 // Working with the ADC output register
-#define ADC_HAS_OVERRUN(x)  x & ADC_OVERRUN
-#define ADC_GET_VALUE(x)    (x >> 4) & 0xFFFF;
+#define ADC_HAS_OVERRUN(x)  (x & ADC_OVERRUN)
+#define ADC_IS_DONE(x) (x & ADC_DONE)
+#define ADC_GET_VALUE(x)    ((x >> 4) & 0xFFFF);
 
 #include <LPC17xx.h>
 

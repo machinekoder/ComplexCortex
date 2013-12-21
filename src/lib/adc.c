@@ -1,49 +1,22 @@
 #include "adc.h"
 
-static uint8 adcBurstEnabled;
-static uint8 adcPin;
-static volatile uint16 adcValue;
+#define ADC_MAX_COUNT 8u
+
+static volatile uint8 adcBurstEnabled;
+static volatile uint32 adcMask;
+static volatile uint32 adcValue[ADC_MAX_COUNT];
 static volatile uint8 adcIntDone;
 
-int8 Adc_initialize(uint32 clk, Adc_Pin pin, Adc_BurstMode burstMode)
+int8 Adc_initialize(uint32 clk, Adc_BurstMode burstMode)
 {
     adcIntDone = 0u;
-    adcValue = 0u;
-    adcPin = pin;
+    adcMask = 0u;
     adcBurstEnabled = burstMode;
     
     ADC_ENABLE_POWER();           // Power on the ADC
     ADC_SET_CORE_CLK();           // Set the ADC core clock
     
     ADC_CLEAR_PINSEL();           // clear pin selection bits
-    switch (pin)
-    {
-        case 0u: ADC_ENABLE_PIN0();  // Enable pin 0
-                ADC_SET_PIN(0);     // set sample pin
-                break;
-        case 1u: ADC_ENABLE_PIN1();  //Enable pin 1
-                ADC_SET_PIN(1);     // set sample pin
-                break;
-        case 2u: ADC_ENABLE_PIN2();  //Enable pin 2
-                ADC_SET_PIN(2);     // set sample pin
-                break;
-        case 3u: ADC_ENABLE_PIN3();  //Enable pin 3
-                ADC_SET_PIN(3);     // set sample pin
-                break;
-        case 4u: ADC_ENABLE_PIN4();  //Enable pin 4
-                ADC_SET_PIN(4);     // set sample pin
-                break;
-        case 5u: ADC_ENABLE_PIN5();  //Enable pin 5
-                ADC_SET_PIN(5);     // set sample pin
-                break;
-        case 6u: ADC_ENABLE_PIN6();  //Enable pin 6
-                ADC_SET_PIN(6);     // set sample pin
-                break;
-        case 7u: ADC_ENABLE_PIN7();  //Enable pin 7
-                ADC_SET_PIN(7);     // set sample pin
-                break;
-        default: break;
-    }
     
     ADC_SET_CLK(clk);           // Set ADC clock
     ADC_CONFIGURE();            // Configure ADC specific settings
@@ -65,7 +38,33 @@ int8 Adc_initialize(uint32 clk, Adc_Pin pin, Adc_BurstMode burstMode)
         ADC_SET_ALL_IRQS();         // Enable all interrupts
     }
     
-   
+    return (int8)(0);
+}
+
+int8 Adc_enablePin(Adc_Pin pin)
+{
+    if (pin > (ADC_MAX_COUNT-1u))
+    {
+        return (int8)(-1);
+    }
+    
+    ADC_SET_PIN(pin);     // set sample pin
+    adcValue[pin] = 0u;
+    adcMask |= (1u << pin);
+    
+    return (int8)(0);
+}
+
+int8 Adc_disablePin(Adc_Pin pin)
+{
+    if (pin > (ADC_MAX_COUNT-1u))
+    {
+        return (int8)(-1);
+    }
+    
+    ADC_CLEAR_PIN(pin);     // clear sample pin
+    adcMask &= ~(1u << pin);
+    
     return (int8)(0);
 }
 
@@ -78,7 +77,7 @@ int8 Adc_deinitialize(void)
     return (int8)(0);
 }
 
-int8 Adc_read(uint16 *value)
+int8 Adc_read(Adc_Pin pin, uint16 *value)
 {
     if (adcBurstEnabled == 0u)
     {
@@ -89,37 +88,87 @@ int8 Adc_read(uint16 *value)
     while (adcIntDone != 1u)             // wait until finished
         ;
     
-    if (ADC_HAS_OVERRUN(adcValue))      // overrun error
+    if (ADC_HAS_OVERRUN(adcValue[pin]))      // overrun error
         return (int8)(-1);
     
-    *value = ADC_GET_VALUE(adcValue);
+    *value = (uint16)ADC_GET_VALUE(adcValue[pin]);
     
     return (int8)(0);
 }
 
 void ADC_IRQHandler(void)
 {   
-    switch (adcPin) // Read ADC will clear the interrupt
-    {
-        case 0u: adcValue = ADC_READ_PIN0();
-                break;
-        case 1u: adcValue = ADC_READ_PIN1();
-                break;
-        case 2u: adcValue = ADC_READ_PIN2();
-                break;
-        case 3u: adcValue = ADC_READ_PIN3();
-                break;
-        case 4u: adcValue = ADC_READ_PIN4();
-                break;
-        case 5u: adcValue = ADC_READ_PIN5();
-                break;
-        case 6u: adcValue = ADC_READ_PIN6();
-                break;
-        case 7u: adcValue = ADC_READ_PIN7();
-                break;
-    }
+    uint32 data;
     
-    ADC_STOP();     // stop adc
+    if (adcMask & (1u << Adc_Pin_0))
+    {
+        data = ADC_READ_PIN0();
+        if (ADC_IS_DONE(data))
+        {
+            adcValue[Adc_Pin_0] = data;
+        }
+    }
+    if (adcMask & (1u << Adc_Pin_1))
+    {
+        data = ADC_READ_PIN1();
+        if (ADC_IS_DONE(data))
+        {
+            adcValue[Adc_Pin_1] = data;
+        }
+    }
+    if (adcMask & (1u << Adc_Pin_2))
+    {
+        data = ADC_READ_PIN2();
+        if (ADC_IS_DONE(data))
+        {
+            adcValue[Adc_Pin_2] = data;
+        }
+    }
+    if (adcMask & (1u << Adc_Pin_3))
+    {
+        data = ADC_READ_PIN3();
+        if (ADC_IS_DONE(data))
+        {
+            adcValue[Adc_Pin_3] = data;
+        }
+    }
+    if (adcMask & (1u << Adc_Pin_4))
+    {
+        data = ADC_READ_PIN4();
+        if (ADC_IS_DONE(data))
+        {
+            adcValue[Adc_Pin_4] = data;
+        }
+    }
+    if (adcMask & (1u << Adc_Pin_5))
+    {
+        data = ADC_READ_PIN5();
+        if (ADC_IS_DONE(data))
+        {
+            adcValue[Adc_Pin_5] = data;
+        }
+    }
+    if (adcMask & (1u << Adc_Pin_6))
+    {
+        data = ADC_READ_PIN6();
+        if (ADC_IS_DONE(data))
+        {
+            adcValue[Adc_Pin_6] = data;
+        }
+    }
+    if (adcMask & (1u << Adc_Pin_7))
+    {
+        data = ADC_READ_PIN7();
+        if (ADC_IS_DONE(data))
+        {
+            adcValue[Adc_Pin_7] = data;
+        }
+    }
+
+    if (!adcBurstEnabled)
+    {
+        ADC_STOP();     // stop adc
+    }
     
     adcIntDone = 1u;
 }

@@ -1,9 +1,7 @@
 #include "rfm12.h"
 
-//#define RFM12_WRITEDATA             writeDataSSP0
-#define RFXX_WRT_CMD(x)               Ssp_write(Ssp1, 0, x)
-//#define RFM12_GETCHAR              // getcharSSP0
-#define RFM12_INIT                  initializeSsp1
+#define RFM12_INIT          initializeSsp1
+#define RFM12_SPI_SPEED     2.5E6      
 
 static volatile Rfm12_Mode receiverSenderMode;
 static volatile Ssp ssps[RFM12_MAX_COUNT];
@@ -14,7 +12,7 @@ int8 Rfm12_initialize(Rfm12 id, Ssp ssp, Gpio_Pair selPair, Gpio_Pair dataPair)
 {
     //init ssp
     Ssp_initialize( ssp,
-                    2.5E6, 
+                    RFM12_SPI_SPEED, 
                     Ssp_DataSize_16Bit, 
                     Ssp_FrameFormat_Spi, 
                     Ssp_Mode_Master, 

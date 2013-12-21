@@ -13,7 +13,7 @@
 #include <ssp.h>
 #include <gpio.h>
 #include <pincon.h>
-#include <sys/types.h>
+#include <types.h>
 
 #define RFM12_MAX_COUNT 5U
 

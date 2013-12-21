@@ -51,11 +51,20 @@ typedef enum {
 
 /** Initializes the ADC
  *  @param clk Clock the ADC should be refreshed with in Hz.
- *  @param pin Pin the ADC should read from.
  *  @param burstMode If 1 the ADC runs in burst mode it is continuously refreshing its data.
  *  @return Return 0 if successful, -1 if not.
  */
-int8 Adc_initialize(uint32 clk, Adc_Pin pin, Adc_BurstMode burstMode);
+int8 Adc_initialize(uint32 clk, Adc_BurstMode burstMode);
+/** Enables an ADC pin 
+ *  @param pin ADC pin to enable
+ *  @return Return 0 if successful, -1 if not
+ */
+int8 Adc_enablePin(Adc_Pin pin);
+/** Disables an ADC pin 
+ *  @param pin ADC pin to disable
+ *  @return Return 0 if successful, -1 if not
+ */
+int8 Adc_disablePin(Adc_Pin pin);
 /** Deinitializes the ADC
  *  @return Returns 0 if successful, -1 if not.
  */
@@ -64,7 +73,7 @@ int8 Adc_deinitialize(void);
  *  @param value A pointer to the variable the value should be written to.
  *  @return Returns 0 if successful, -1 if not.
  */
-int8 Adc_read(uint16 *value);
+int8 Adc_read(Adc_Pin pin, uint16* value);
 
 /**
  * @}
