@@ -569,6 +569,10 @@ void WiFly_printf(char* fmt, ...);
  *  @param func Pointer to the function that should be called when a command arives
  */ 
 void WiFly_setProcessFunction(void (* func)(char *));
+/** Sets the udp command processing function for WiFly.
+ *  @param func Pointer to the function that should be called when a command arives
+ */ 
+void WiFly_setUdpProcessFunction(void (* func)(char *));
 /** Sets the command error function for WiFly.
  *  @param func Pointer to the function that should be called when a error occures
  */ 

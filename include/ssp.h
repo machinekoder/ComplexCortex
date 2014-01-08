@@ -107,17 +107,11 @@ extern void Ssp_initialize(Ssp ssp,
                            Ssp_ClockOutPolarity clockOutPolarity,
                            Ssp_ClockOutPhase clockOutPhase
                           );
-/** Initializes a SEL pin for the SSP device.
- *  @param ssp  The SSP device to initialize.
- *  @param id   Id of the SEL pin.
- *  @param port The port of the pin.
- *  @param pin  The pin number.
- */
-extern void Ssp_initializeSel(Ssp ssp, uint8 id, uint8 port, uint8 pin);
+extern uint8 Ssp_initializeSel(Ssp ssp, uint8 port, uint8 pin);
 /** Puts a character to the SSP1 bus and discards the received data.
  *  @param ssp      The SSP device to write to.
- *  @param selId    Id of the SEL pin.
  *  @param data     The data to write.
+ *  @return         Id of the initialized SEL pin.
  */
 extern void Ssp_write(Ssp ssp, uint8 selId, uint16 data);
 /** Gets a character from the SSP1 bus and writes 0 to the bus.

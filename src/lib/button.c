@@ -19,13 +19,13 @@ static volatile uint32 maxunset;
 
 /** reads the button values
  */
-void valueButton(void);
+static void valueButton(void);
 
 /** stores the values and counts the matches.
  *@param i is the number of the row of buttons.
  *@param var is the value of the button.
  */
-void putVal(uint8 i, uint8 pressed);
+static void putVal(uint8 i, uint8 pressed);
 
 int8 Button_initialize(uint32 khz, uint32 sampleInterval, uint32 timeoutInterval, Timer timer)
 {

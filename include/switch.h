@@ -61,6 +61,12 @@ void Switch_on(Switch id);
  */
 void Switch_off(Switch id);
 
+/** Sets a switch to on or off
+ *  @param id Id of the Switch
+ *  @param value On=1 Off=0
+ */
+void Switch_set(Switch id, uint8 value);
+
 /**
  * @}
  */

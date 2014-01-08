@@ -34,25 +34,30 @@
 #define GPIO2_INT_PIN_COUNT             14
 
 #define GPIO_IRQHANDLER()               EINT3_IRQHandler()
-#define GPIO_ENABLE_IRQS()              NVIC_EnableIRQ(EINT3_IRQn);
+#define GPIO_ENABLE_IRQS()              NVIC_EnableIRQ(EINT3_IRQn)
+#define GPIO_DISABLE_IRQS()             NVIC_DisableIRQ(EINT3_IRQn)
 
 #define GPIO0_ENABLE_IRQ_RISING_EDGE(pin)   LPC_GPIOINT->IO0IntEnR |= (1 << pin)
-#define GPIO0_DISABLE_IRQ_RISING_EDGE(pin)  LPC_GPIOINT->IO0IntEnR &= ~(1 << pin);
+#define GPIO0_DISABLE_IRQ_RISING_EDGE(pin)  LPC_GPIOINT->IO0IntEnR &= ~(1 << pin)
 #define GPIO0_ENABLE_IRQ_FALLING_EDGE(pin)  LPC_GPIOINT->IO0IntEnF |= (1 << pin)
-#define GPIO0_DISABLE_IRQ_FALLING_EDGE(pin) LPC_GPIOINT->IO0IntEnF &= ~(1 << pin);
+#define GPIO0_DISABLE_IRQ_FALLING_EDGE(pin) LPC_GPIOINT->IO0IntEnF &= ~(1 << pin)
 #define GPIO0_RISING_IRQ_PENDING(pin)       LPC_GPIOINT->IO0IntStatR & (1 << pin)
 #define GPIO0_FALLING_IRQ_PENDING(pin)      LPC_GPIOINT->IO0IntStatF & (1 << pin)
 #define GPIO0_CLEAR_IRQ(pin)                LPC_GPIOINT->IO0IntClr |= (1 << pin)
 #define GPIO0_IRQ_PENDING()                 LPC_GPIOINT->IntStatus & (1 << 0)
+#define GPIO0_DISABLE_ALL_IRQ_FALLING_EDGE() LPC_GPIOINT->IO0IntEnR = 0u
+#define GPIO0_DISABLE_ALL_IRQ_RISING_EDGE() LPC_GPIOINT->IO0IntEnF = 0u
 
 #define GPIO2_ENABLE_IRQ_RISING_EDGE(pin)   LPC_GPIOINT->IO2IntEnR |= (1 << pin)
-#define GPIO2_DISABLE_IRQ_RISING_EDGE(pin)  LPC_GPIOINT->IO2IntEnR &= ~(1 << pin);
+#define GPIO2_DISABLE_IRQ_RISING_EDGE(pin)  LPC_GPIOINT->IO2IntEnR &= ~(1 << pin)
 #define GPIO2_ENABLE_IRQ_FALLING_EDGE(pin)  LPC_GPIOINT->IO2IntEnF |= (1 << pin)
-#define GPIO2_DISABLE_IRQ_FALLING_EDGE(pin) LPC_GPIOINT->IO2IntEnF &= ~(1 << pin);
+#define GPIO2_DISABLE_IRQ_FALLING_EDGE(pin) LPC_GPIOINT->IO2IntEnF &= ~(1 << pin)
 #define GPIO2_RISING_IRQ_PENDING(pin)       LPC_GPIOINT->IO2IntStatR & (1 << pin)
 #define GPIO2_FALLING_IRQ_PENDING(pin)      LPC_GPIOINT->IO2IntStatF & (1 << pin)
 #define GPIO2_CLEAR_IRQ(pin)                LPC_GPIOINT->IO2IntClr |= (1 << pin)
 #define GPIO2_IRQ_PENDING()                 LPC_GPIOINT->IntStatus & (1 << 2)
+#define GPIO2_DISABLE_ALL_IRQ_FALLING_EDGE() LPC_GPIOINT->IO2IntEnR = 0u
+#define GPIO2_DISABLE_ALL_IRQ_RISING_EDGE() LPC_GPIOINT->IO2IntEnF = 0u
 
 #include <LPC17xx.h>
 

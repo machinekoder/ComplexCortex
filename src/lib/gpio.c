@@ -3,6 +3,32 @@
 static void (* functionPointers0[GPIO0_INT_PIN_COUNT])(void);
 static void (* functionPointers2[GPIO2_INT_PIN_COUNT])(void);
 
+static void securityFunction();
+
+void securityFunction()
+{
+    // do nothing, this function is just for protection
+}
+
+void Gpio_initialize()
+{
+    uint8 i;
+    
+    GPIO0_DISABLE_ALL_IRQ_FALLING_EDGE();
+    GPIO0_DISABLE_ALL_IRQ_RISING_EDGE();
+    GPIO2_DISABLE_ALL_IRQ_FALLING_EDGE();
+    GPIO2_DISABLE_ALL_IRQ_RISING_EDGE();
+    
+    for (i = 0u; i < GPIO0_INT_PIN_COUNT; ++i)
+    {
+        functionPointers0[i] = &securityFunction;
+    }
+    for (i = 0u; i < GPIO2_INT_PIN_COUNT; ++i)
+    {
+        functionPointers2[i] = &securityFunction;
+    }
+}
+
 inline void Gpio_setDirection(uint8 port, uint8 pin, Gpio_Direction direction)
 {
     switch (port)
@@ -119,9 +145,12 @@ inline void Gpio_toggle(uint8 port, uint8 pin)
 
 void Gpio_enableInterrupt(uint8 port, uint8 pin, Gpio_Interrupt type, void (* func)(void))
 {
+    GPIO_DISABLE_IRQS();
     switch (port)
     {
-        case 0u: if ((type == Gpio_Interrupt_RisingEdge) || (type == Gpio_Interrupt_FallingAndRisingEdge))
+        case 0u: functionPointers0[pin] = func;
+                GPIO0_CLEAR_IRQ(pin);
+                if ((type == Gpio_Interrupt_RisingEdge) || (type == Gpio_Interrupt_FallingAndRisingEdge))
                 {
                    GPIO0_ENABLE_IRQ_RISING_EDGE(pin);
                 }
@@ -129,10 +158,11 @@ void Gpio_enableInterrupt(uint8 port, uint8 pin, Gpio_Interrupt type, void (* fu
                 {
                     GPIO0_ENABLE_IRQ_FALLING_EDGE(pin);
                 }
-                GPIO0_CLEAR_IRQ(pin);
-                functionPointers0[pin] = func;
+                
                 break;
-        case 2u: if ((type == Gpio_Interrupt_RisingEdge) || (type == Gpio_Interrupt_FallingAndRisingEdge))
+        case 2u: functionPointers2[pin] = func;
+                GPIO2_CLEAR_IRQ(pin);
+                if ((type == Gpio_Interrupt_RisingEdge) || (type == Gpio_Interrupt_FallingAndRisingEdge))
                 {
                     GPIO2_ENABLE_IRQ_RISING_EDGE(pin);
                 }
@@ -140,8 +170,7 @@ void Gpio_enableInterrupt(uint8 port, uint8 pin, Gpio_Interrupt type, void (* fu
                 {
                     GPIO2_ENABLE_IRQ_FALLING_EDGE(pin);
                 }
-                GPIO2_CLEAR_IRQ(pin);
-                functionPointers2[pin] = func;
+                
                 break;
         default: return;
     }

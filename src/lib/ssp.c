@@ -7,6 +7,8 @@ static volatile Ssp_Loopback ssp1_loopbackMode;
 
 static volatile Gpio_Pair ssp0_selPins[SSP_MAX_SEL_PINS];
 static volatile Gpio_Pair ssp1_selPins[SSP_MAX_SEL_PINS];
+static uint8 ssp0_selCount;
+static uint8 ssp1_selCount;
 
 static volatile uint32 ssp0_interruptOverRunStat;
 static volatile uint32 ssp0_interruptRxTimeoutStat;
@@ -41,6 +43,7 @@ void Ssp_initialize(Ssp ssp,
        ssp0_interruptOverRunStat = 0u;
        ssp0_interruptRxTimeoutStat = 0u;
        ssp0_interruptRxStat = 0u;
+       ssp0_selCount = 0u;
        
         SSP0_ENABLE_POWER();
 
@@ -161,6 +164,7 @@ void Ssp_initialize(Ssp ssp,
        ssp1_interruptOverRunStat = 0u;
        ssp1_interruptRxTimeoutStat = 0u;
        ssp1_interruptRxStat = 0u;
+       ssp1_selCount = 0u;
        
         SSP1_ENABLE_POWER();
    
@@ -277,7 +281,7 @@ void Ssp_initialize(Ssp ssp,
 
 void SSP0_IRQHANDLER()
 {
-    uint32_t regValue;
+    uint32 regValue;
     
     regValue = SSP0_GET_INTERRUPT_STATUS();
     if ( regValue & SSPMIS_RORMIS )       /* Receive overrun interrupt */
@@ -299,7 +303,7 @@ void SSP0_IRQHANDLER()
 
 void SSP1_IRQHANDLER()
 {
-    uint32_t regValue;
+    uint32 regValue;
     
     regValue = SSP1_GET_INTERRUPT_STATUS();
     if ( regValue & SSPMIS_RORMIS )       /* Receive overrun interrupt */
@@ -319,25 +323,27 @@ void SSP1_IRQHANDLER()
     }
 }
 
-void Ssp_initializeSel(Ssp ssp, uint8 id, uint8 port, uint8 pin)
+uint8 Ssp_initializeSel(Ssp ssp, uint8 port, uint8 pin)
 {
+    Gpio_setDirection(port, pin, Gpio_Direction_Output);
+    Pin_setMode(port, pin, Pin_Mode_PullUp);
+    Gpio_set(port, pin);
+    
     if (ssp == Ssp0)
     {
-        ssp0_selPins[id].pin = pin;
-        ssp0_selPins[id].port = port;
-        
-        Gpio_setDirection(port, pin, Gpio_Direction_Output);
-        Pin_setMode(port, pin, Pin_Mode_PullUp);
-        Gpio_set(port, pin);
+        ssp0_selPins[ssp0_selCount].pin = pin;
+        ssp0_selPins[ssp0_selCount].port = port;
+        return ssp0_selCount++; 
     }
     else if (ssp == Ssp1)
     {
-        ssp1_selPins[id].pin = pin;
-        ssp1_selPins[id].port = port;
-        
-        Gpio_setDirection(port, pin, Gpio_Direction_Output);
-        Pin_setMode(port, pin, Pin_Mode_PullUp);
-        Gpio_set(port, pin);
+        ssp1_selPins[ssp1_selCount].pin = pin;
+        ssp1_selPins[ssp1_selCount].port = port;
+        return ssp1_selCount++;
+    }
+    else
+    {
+        return 0u;  // we should not get here if params where correct
     }
 }
 

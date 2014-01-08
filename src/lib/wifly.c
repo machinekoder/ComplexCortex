@@ -27,17 +27,23 @@ static uint16 responseBufferPos;
 static Uart wiflyUart;
 
 static void (* taskFunctionPointer)(char *);
+static void (* udpTaskFunctionPointer)(char *);
 
 static WiFly_State wiFlyState;
 
-int8 findInResponse(const char* toMatch, uint32 timeout);
-int8 responseMatched(const char* toMatch);
-int8 findWiFlyVersion(uint32 timeout);
-int8 setCommand(char *command);
-int8 getCommand(char* command);
-int8 otherCommand(char *command, char* awaitedResponse);
-
+static int8 findInResponse(const char* toMatch, uint32 timeout);
+static int8 responseMatched(const char* toMatch);
+static int8 findWiFlyVersion(uint32 timeout);
+static int8 setCommand(char *command);
+static int8 getCommand(char* command);
+static int8 otherCommand(char *command, char* awaitedResponse);
 static void internalProcessTask(char* command);
+static void securityFunction(char* command);
+
+void securityFunction(char* command)
+{
+    // does nothing, just for security reasons
+}
 
 int8 WiFly_initialize(Uart uart, uint32 baudrate)
 {
@@ -66,16 +72,13 @@ int8 WiFly_initialize(Uart uart, uint32 baudrate)
     WiFly_setCommOpen("\a*OPEN*\a");        // Set the open command
     WiFly_setCommClose("\a*CLOS*\a");       // Set the close command
     WiFly_setCommRemote("\a*HELLO*\a");     // Set the remote command
+    WiFly_setSysPrintlvl(0x10u);            // Enable heartbeat messages
     
     WiFly_actionExitCommandMode();
     
     Uart_setProcessFunction(wiflyUart, &internalProcessTask);
-    
-    /*actionWiFlyEnterCommandMode();           // Enter command mode
-    setWiFlyUartBaud(baudrate);              // Set baudrate instantly to target rate
-    fileIoWiFlySaveDefault();
-    actionWiFlyReboot();
-    WIFLY_SET_BAUDRATE(baudrate);*/
+    taskFunctionPointer = &securityFunction;
+    udpTaskFunctionPointer = &securityFunction;
     
     return (int8)(0);
 }
@@ -350,7 +353,7 @@ int8 WiFly_setSysMask(uint32 mask)
 
 int8 WiFly_setSysPrintlvl(uint32 value)
 {
-    xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set s p %u\r", value);
+    xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set s p %x\r", value);
     return setCommand(commandBuffer);
 }
 
@@ -892,7 +895,11 @@ void WiFly_printf(char *fmt, ...)
 void WiFly_setProcessFunction(void (* func)(char *))
 {
     taskFunctionPointer = func;
-    //WIFLY_SET_PROCESS_FUNCTION(func);
+}
+
+void WiFly_setUdpProcessFunction(void (* func)(char *))
+{
+    udpTaskFunctionPointer = func;
 }
 
 void WiFly_setErrorFunction(void (* func)())
@@ -1059,7 +1066,10 @@ void internalProcessTask(char *command)
     {
         (*taskFunctionPointer)(command);
     }
-    // else it is unnecessary
+    else // probably UDP stuff
+    {
+        (*udpTaskFunctionPointer)(command);
+    }
 }
 
 uint8 WiFly_isConnected()
@@ -1130,8 +1140,8 @@ int8 WiFly_createAdhocNetwork(char *ssid)
 
 int8 WiFly_createAccessPoint(char *ssid)
 {
-    if (WiFly_actionReboot() == (int8)(-1))
-        return (int8)(-1);
+ //   if (WiFly_actionReboot() == (int8)(-1))
+  //      return (int8)(-1);
     
     if (WiFly_actionEnterCommandMode(TRUE) == (int8)(-1))
         return (int8)(-1);

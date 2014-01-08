@@ -18,6 +18,11 @@ void Switch_initialize(void)
 
 void Switch_initializeSwitch(Switch id, uint8 port, uint8 pin, Switch_Type type, Pin_Mode pinMode, Pin_OpenDrain openDrain)
 {
+    if (id > (SWITCH_MAX_COUNT-1u))
+    {
+        return;
+    }
+    
     Gpio_setDirection(port, pin, Gpio_Direction_Output);
     Pin_setMode(port, pin, pinMode);
     Pin_setOpenDrainMode(port, pin, openDrain);
@@ -32,6 +37,11 @@ void Switch_initializeSwitch(Switch id, uint8 port, uint8 pin, Switch_Type type,
 
 void Switch_on(Switch id)
 {
+    if (id > (SWITCH_MAX_COUNT-1u))
+    {
+        return;
+    }
+    
     if (switches[id].type == Switch_Type_HighActive)
     {
         Gpio_set(switches[id].port, switches[id].pin);
@@ -44,6 +54,11 @@ void Switch_on(Switch id)
 
 void Switch_off(Switch id)
 {
+    if (id > (SWITCH_MAX_COUNT-1u))
+    {
+        return;
+    }
+    
     if (switches[id].type == Switch_Type_HighActive)
     {
         Gpio_clear(switches[id].port, switches[id].pin);
@@ -51,5 +66,17 @@ void Switch_off(Switch id)
     else
     {
         Gpio_set(switches[id].port, switches[id].pin);
+    }
+}
+
+void Switch_set(Switch id, uint8 value)
+{
+    if (value == 1u)
+    {
+        Switch_on(id);
+    }
+    else 
+    {
+        Switch_off(id);
     }
 }

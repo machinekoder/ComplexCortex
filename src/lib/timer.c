@@ -2,75 +2,70 @@
 
 static void ((* functionPointer[4u])(void));
 
-int8 initializeTimer0(uint32 khz, uint32 intervalUs);
-int8 initializeTimer1(uint32 khz, uint32 intervalUs);
-int8 initializeTimer2(uint32 khz, uint32 intervalUs);
-int8 initializeTimer3(uint32 khz, uint32 intervalUs);
+static int8 initializeTimer0(uint32 khz, uint32 intervalUs);
+static int8 initializeTimer1(uint32 khz, uint32 intervalUs);
+static int8 initializeTimer2(uint32 khz, uint32 intervalUs);
+static int8 initializeTimer3(uint32 khz, uint32 intervalUs);
 
-int8 deinitializeTimer0(void);
-int8 deinitializeTimer1(void);
-int8 deinitializeTimer2(void);
-int8 deinitializeTimer3(void);
+static int8 deinitializeTimer0(void);
+static int8 deinitializeTimer1(void);
+static int8 deinitializeTimer2(void);
+static int8 deinitializeTimer3(void);
 
-void startTimer0(void);
-void startTimer1(void);
-void startTimer2(void);
-void startTimer3(void);
+static void startTimer0(void);
+static void startTimer1(void);
+static void startTimer2(void);
+static void startTimer3(void);
 
-void stopTimer0(void);
-void stopTimer1(void);
-void stopTimer2(void);
-void stopTimer3(void);
+static void stopTimer0(void);
+static void stopTimer1(void);
+static void stopTimer2(void);
+static void stopTimer3(void);
 
-void resetTimer0(void);
-void resetTimer1(void);
-void resetTimer2(void);
-void resetTimer3(void);
+static void resetTimer0(void);
+static void resetTimer1(void);
+static void resetTimer2(void);
+static void resetTimer3(void);
 
-void setIntervalUsTimer0(uint32 us);
-void setIntervalUsTimer1(uint32 us);
-void setIntervalUsTimer2(uint32 us);
-void setIntervalUsTimer3(uint32 us);
+static void setIntervalUsTimer0(uint32 us);
+static void setIntervalUsTimer1(uint32 us);
+static void setIntervalUsTimer2(uint32 us);
+static void setIntervalUsTimer3(uint32 us);
 
-void setIntervalMsTimer0(uint32 ms);
-void setIntervalMsTimer1(uint32 ms);
-void setIntervalMsTimer2(uint32 ms);
-void setIntervalMsTimer3(uint32 ms);
+static void setIntervalMsTimer0(uint32 ms);
+static void setIntervalMsTimer1(uint32 ms);
+static void setIntervalMsTimer2(uint32 ms);
+static void setIntervalMsTimer3(uint32 ms);
 
-void setPriorityTimer0(uint8 priority);
-void setPriorityTimer1(uint8 priority);
-void setPriorityTimer2(uint8 priority);
-void setPriorityTimer3(uint8 priority);
+static void setPriorityTimer0(uint8 priority);
+static void setPriorityTimer1(uint8 priority);
+static void setPriorityTimer2(uint8 priority);
+static void setPriorityTimer3(uint8 priority);
 
-void connectFunctionTimer0(void (* func)(void));
-void connectFunctionTimer1(void (* func)(void));
-void connectFunctionTimer2(void (* func)(void));
-void connectFunctionTimer3(void (* func)(void));
+static void connectFunctionTimer0(void (* func)(void));
+static void connectFunctionTimer1(void (* func)(void));
+static void connectFunctionTimer2(void (* func)(void));
+static void connectFunctionTimer3(void (* func)(void));
 
-int8 delayUsTimer0(uint32 us);
-int8 delayUsTimer1(uint32 us);
-int8 delayUsTimer2(uint32 us);
-int8 delayUsTimer3(uint32 us);
+static int8 delayUsTimer0(uint32 us);
+static int8 delayUsTimer1(uint32 us);
+static int8 delayUsTimer2(uint32 us);
+static int8 delayUsTimer3(uint32 us);
 
-int8 delayMsTimer0(uint32 ms);
-int8 delayMsTimer1(uint32 ms);
-int8 delayMsTimer2(uint32 ms);
-int8 delayMsTimer3(uint32 ms);
+static int8 delayMsTimer0(uint32 ms);
+static int8 delayMsTimer1(uint32 ms);
+static int8 delayMsTimer2(uint32 ms);
+static int8 delayMsTimer3(uint32 ms);
 
-int8 singleShotTimer0(uint32 ms, void (* func)(void));
-int8 singleShotTimer1(uint32 ms, void (* func)(void));
-int8 singleShotTimer2(uint32 ms, void (* func)(void));
-int8 singleShotTimer3(uint32 ms, void (* func)(void));
+static int8 singleShotTimer0(uint32 ms, void (* func)(void));
+static int8 singleShotTimer1(uint32 ms, void (* func)(void));
+static int8 singleShotTimer2(uint32 ms, void (* func)(void));
+static int8 singleShotTimer3(uint32 ms, void (* func)(void));
 
-uint32 getCounterValueTimer0();
-uint32 getCounterValueTimer1();
-uint32 getCounterValueTimer2();
-uint32 getCounterValueTimer3();
-
-bool runningTimer0();
-bool runningTimer1();
-bool runningTimer2();
-bool runningTimer3();
+static uint32 getCounterValueTimer0();
+static uint32 getCounterValueTimer1();
+static uint32 getCounterValueTimer2();
+static uint32 getCounterValueTimer3();
 
 int8 initializeTimer0(uint32 khz, uint32 intervalUs)                                          
 {                                                                                               
@@ -970,32 +965,18 @@ inline uint32 Timer_counterValue(Timer id)
     return 0u;
 }
 
-bool runningTimer0()
+inline bool Timer_isRunning(Timer id)
 {
-    //bool running;
-    //CPU_SR_ALLOC();
+    if (id == 0u)
+        return (bool)(TIMER_RUNNING(0));
+    else if (id == 1u)
+        return (bool)(TIMER_RUNNING(1));
+    else if (id == 2u)
+        return (bool)(TIMER_RUNNING(2));
+    else if (id == 3u)
+        return (bool)(TIMER_RUNNING(3));
     
-    //CPU_CRITICAL_ENTER();
-    //running = TIMER_RUNNING(0);
-    return TIMER_RUNNING(0);
-    //CPU_CRITICAL_EXIT();
-    
-    //return running;
-}
-
-bool runningTimer1()
-{
-  return TIMER_RUNNING(1);
-}
-
-bool runningTimer2()
-{
-  return TIMER_RUNNING(2);
-}
-
-bool runningTimer3()
-{
-  return TIMER_RUNNING(3);
+    return (bool)0u;
 }
 
 int8 Timer_initialize(Timer timer, uint32 khz, uint32 intervalUs)

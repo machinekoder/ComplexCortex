@@ -39,6 +39,7 @@
 #define REFLECT_REMAINDER(X)	(X)
 #endif
 
+static uint32 reflect(uint32 data, uint8 nBits);
 
 /*********************************************************************
  *

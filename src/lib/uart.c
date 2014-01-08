@@ -47,40 +47,35 @@ static void (* errorFunctionPointer3)(void);
 
 //char printfBuffer[UART_PRINTF_BUFFER_SIZE];
 
-int8 initializeUart0(uint32 baudrate);
-int8 initializeUart1(uint32 baudrate);
-int8 initializeUart2(uint32 baudrate);
-int8 initializeUart3(uint32 baudrate);
+static int8 initializeUart0(uint32 baudrate);
+static int8 initializeUart1(uint32 baudrate);
+static int8 initializeUart2(uint32 baudrate);
+static int8 initializeUart3(uint32 baudrate);
 
-int8 putcharUart0(char c);
-int8 putcharUart1(char c);
-int8 putcharUart2(char c);
-int8 putcharUart3(char c);
+static int8 putcharUart0(char c);
+static int8 putcharUart1(char c);
+static int8 putcharUart2(char c);
+static int8 putcharUart3(char c);
 
-int8 writeDataUart0(void *data, uint32 length);
-int8 writeDataUart1(void *data, uint32 length);
-int8 writeDataUart2(void *data, uint32 length);
-int8 writeDataUart3(void *data, uint32 length);
+static int8 writeDataUart0(void *data, uint32 length);
+static int8 writeDataUart1(void *data, uint32 length);
+static int8 writeDataUart2(void *data, uint32 length);
+static int8 writeDataUart3(void *data, uint32 length);
 
-int8 getcharUart0(char* c);
-int8 getcharUart1(char* c);
-int8 getcharUart2(char* c);
-int8 getcharUart3(char* c);
+static int8 getcharUart0(char* c);
+static int8 getcharUart1(char* c);
+static int8 getcharUart2(char* c);
+static int8 getcharUart3(char* c);
 
-int8 printfUart0(char* format, ...);
-int8 printfUart1(char* format, ...);
-int8 printfUart2(char* format, ...);
-int8 printfUart3(char* format, ...);
+static void flushUart0(void);  
+static void flushUart1(void);  
+static void flushUart2(void);  
+static void flushUart3(void);  
 
-void flushUart0(void);  
-void flushUart1(void);  
-void flushUart2(void);  
-void flushUart3(void);  
-
-void setBaudrateUart0(uint32 baudrate);
-void setBaudrateUart1(uint32 baudrate);
-void setBaudrateUart2(uint32 baudrate);
-void setBaudrateUart3(uint32 baudrate);
+static void setBaudrateUart0(uint32 baudrate);
+static void setBaudrateUart1(uint32 baudrate);
+static void setBaudrateUart2(uint32 baudrate);
+static void setBaudrateUart3(uint32 baudrate);
 
 int8 initializeUart0(uint32 baudrate)
 {

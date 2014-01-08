@@ -33,6 +33,10 @@ typedef struct {
     uint8 port;
     uint8 pin;
 } Gpio_Pair;
+
+/** Initializes the GPIO library, disables all GPIO interrupts
+ */
+void Gpio_initialize();
                       
 /** Set the direction of the GPIO pin
  *  @param port Port of the pin.

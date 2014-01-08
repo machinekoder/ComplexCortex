@@ -7,6 +7,7 @@ static volatile Rfm12_Mode receiverSenderMode;
 static volatile Ssp ssps[RFM12_MAX_COUNT];
 static volatile Gpio_Pair dataPairs[RFM12_MAX_COUNT];
 static volatile bool ookStatus[RFM12_MAX_COUNT];
+static volatile uint8 sspIds[RFM12_MAX_COUNT];
 
 int8 Rfm12_initialize(Rfm12 id, Ssp ssp, Gpio_Pair selPair, Gpio_Pair dataPair)
 {
@@ -21,7 +22,7 @@ int8 Rfm12_initialize(Rfm12 id, Ssp ssp, Gpio_Pair selPair, Gpio_Pair dataPair)
                     Ssp_ClockOutPolarity_Low,
                     Ssp_ClockOutPhase_First
               );
-    Ssp_initializeSel(ssp, id, selPair.port, selPair.pin);
+    sspIds[(uint8)id] = Ssp_initializeSel(ssp, selPair.port, selPair.pin);
     
     dataPairs[id] = dataPair;
     ssps[id] = ssp;
@@ -256,7 +257,7 @@ void Rfm12_setBaseConfig(Rfm12 id,
                   | (rxFifoEnable << 6) 
                   | (frequencyBand << 4) 
                   | (loadCapacitance << 0);
-    Ssp_write(ssps[id], id, data);
+    Ssp_write(ssps[id], sspIds[id], data);
 }
 
 void Rfm12_setPowerManagement(Rfm12 id,
@@ -278,7 +279,7 @@ void Rfm12_setPowerManagement(Rfm12 id,
                   | (brownoutEnable << 2)
                   | (wakeupEnable << 1)
                   | (clockEnable << 0);
-    Ssp_write(ssps[id], id, data);
+    Ssp_write(ssps[id], sspIds[id], data);
     
     if (receiverEnable == Rfm12_ReceiverEnabled)
     {
@@ -307,7 +308,7 @@ void Rfm12_setClockGenerator(Rfm12 id,
                   | (phaseDelay << 3)
                   | (ditheringEnable << 2)
                   | (bandwith << 0);
-    Ssp_write(ssps[id], id, data);
+    Ssp_write(ssps[id], sspIds[id], data);
 }
 
 void Rfm12_setLowBatteryDetectorAndClockDivider(Rfm12 id,
@@ -321,7 +322,7 @@ void Rfm12_setLowBatteryDetectorAndClockDivider(Rfm12 id,
     
     data = 0xC000u | (clock << 5)
                 | (voltageData << 0);
-    Ssp_write(ssps[id], id, data);
+    Ssp_write(ssps[id], sspIds[id], data);
 }
 
 void Rfm12_setFrequency(Rfm12 id, Rfm12_FrequencyBand frequencyBand, float frequency)
@@ -347,7 +348,7 @@ void Rfm12_setFrequency(Rfm12 id, Rfm12_FrequencyBand frequencyBand, float frequ
     }
     
     data = 0xA000u | (frequencyData << 0);
-    Ssp_write(ssps[id], id, data);
+    Ssp_write(ssps[id], sspIds[id], data);
 }
 
 void Rfm12_setDataRate(Rfm12 id, uint32 baudrate)
@@ -369,7 +370,7 @@ void Rfm12_setDataRate(Rfm12 id, uint32 baudrate)
     
     data = 0xC600u | (clockSelect << 7)
                   | (rate << 0);
-    Ssp_write(ssps[id], id, data);
+    Ssp_write(ssps[id], sspIds[id], data);
 }
 
 void Rfm12_setReceiverControl(Rfm12 id,
@@ -385,14 +386,14 @@ void Rfm12_setReceiverControl(Rfm12 id,
                   | (receiverBasebandBandwidth << 5)
                   | (lnaGainSelect << 3)
                   | (rssiDetectorThreshold << 0);
-    Ssp_write(ssps[id], id, data);
+    Ssp_write(ssps[id], sspIds[id], data);
 }
 
 void Rfm12_setSynchronPattern(Rfm12 id, uint8 pattern)
 {
     uint16 data;
     data = 0xCE00u | pattern;
-    Ssp_write(ssps[id], id, data);
+    Ssp_write(ssps[id], sspIds[id], data);
 }
 
 void Rfm12_setDataFilter(Rfm12 id,
@@ -409,7 +410,7 @@ void Rfm12_setDataFilter(Rfm12 id,
                   | (dqdThreshold << 0)
                   | (1 << 5)
                   | (ookModulationEnable << 3);   // this bit is somehow necessary for the OOK demodulation
-    Ssp_write(ssps[id], id, data);
+    Ssp_write(ssps[id], sspIds[id], data);
 }
 
 void Rfm12_setFifoAndResetMode(Rfm12 id,
@@ -425,7 +426,7 @@ void Rfm12_setFifoAndResetMode(Rfm12 id,
                   | (alwayFill << 2)
                   | (fifoFill << 1)
                   | (sensResetEnable << 0);
-    Ssp_write(ssps[id], id, data);
+    Ssp_write(ssps[id], sspIds[id], data);
 }
 
 void Rfm12_setAutomaticFrequencyControl(Rfm12 id,
@@ -443,7 +444,7 @@ void Rfm12_setAutomaticFrequencyControl(Rfm12 id,
                   | (fineModeEnable << 2)
                   | (afcOffsetEnable << 1)
                   | (afcEnable << 0);
-    Ssp_write(ssps[id], id, data);
+    Ssp_write(ssps[id], sspIds[id], data);
 }
 
 void Rfm12_setTxConfiguration(Rfm12 id,
@@ -455,14 +456,14 @@ void Rfm12_setTxConfiguration(Rfm12 id,
     data = 0x9800u | (modulationPolarity << 8)
                   | (frequencyDeviation << 4)
                   | (relativeOutputPower << 0);
-    Ssp_write(ssps[id], id, data);
+    Ssp_write(ssps[id], sspIds[id], data);
 }
 
 void Rfm12_setWakeUpTimer(Rfm12 id, uint8 radix, uint8 mantissa)
 {
     uint16 data;
     data = 0xE000u | (radix << 8) | (mantissa << 0);
-    Ssp_write(ssps[id], id, data);
+    Ssp_write(ssps[id], sspIds[id], data);
 }
 
 void Rfm12_setLowDutyCycle(Rfm12 id,
@@ -472,13 +473,13 @@ void Rfm12_setLowDutyCycle(Rfm12 id,
     uint16 data;
     data = 0xC800u | (duration << 1)
                   | (cyclicWakeupEnable << 0);
-    Ssp_write(ssps[id], id, data);
+    Ssp_write(ssps[id], sspIds[id], data);
 }
 
 void Rfm12_softwareReset(Rfm12 id)
 {
     uint16 data = 0xFE00u;
-    Ssp_write(ssps[id], id, data);
+    Ssp_write(ssps[id], sspIds[id], data);
 }
 
 uint16 Rfm12_readStatus(Rfm12 id)
@@ -486,7 +487,7 @@ uint16 Rfm12_readStatus(Rfm12 id)
     uint16 writeData = 0x000u;
     uint16 readData;
     
-    Ssp_readWrite(ssps[id], id, writeData, &readData);
+    Ssp_readWrite(ssps[id], sspIds[id], writeData, &readData);
     
     return readData;
 }
@@ -496,7 +497,7 @@ char Rfm12_read(Rfm12 id)
     uint16 writeData = 0xB000u;
     uint16 readData;
     
-    Ssp_readWrite(ssps[id], id, writeData, &readData);
+    Ssp_readWrite(ssps[id], sspIds[id], writeData, &readData);
     
     return (char)(readData & (0x0Fu));
 }
@@ -505,5 +506,5 @@ void Rfm12_write(Rfm12 id, char byte)
 {
     uint16 data;
     data = 0xB800u | (byte << 0);
-    Ssp_write(ssps[id], id, data);
+    Ssp_write(ssps[id], sspIds[id], data);
 }
