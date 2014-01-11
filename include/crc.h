@@ -15,7 +15,7 @@
 /**
  * @file crc.h
  * @author Michael Barr & Alexander Rössler
- * @brief Library for controlling the IAP functions
+ * @brief Library that provides CRC function for embedded use
  * @date 2000, Modified 2013
  */
 /** @defgroup CRC CRC (Circular Redundancy Check)
