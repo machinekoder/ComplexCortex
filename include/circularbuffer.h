@@ -17,12 +17,11 @@
 /** Initialize this structure with the initializeCb function! */
 typedef struct
 {
-    void *inPointer;        /** Pointer holding the write position */
-    void *outPointer;       /** Pointer holding the read position */
-    void *startPointer;     /** Pointer to the beginning of the data */
-    uint16     dataSize;    /** Size of one element */
-    uint16     bufferSize;  /** Size of the buffer in bytes */
-    
+  uint16 bufferSize;    /** Size of the buffer in bytes */
+  uint16 start;         /** Start index */
+  uint16 count;         /** Current data count */
+  uint16 dataSize;      /** Size of one element */
+  void *startPointer;   /** Pointer to the beginning of the data */
 } CircularBuffer;
 
 /** Initializes a circular buffer.

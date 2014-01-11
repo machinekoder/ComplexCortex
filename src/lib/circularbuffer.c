@@ -4,6 +4,8 @@ int8 Cb_initialize(CircularBuffer *buffer, uint16 bufferSize, uint16 dataSize, v
 {
     buffer->dataSize = dataSize;
     buffer->bufferSize = bufferSize * dataSize;
+    buffer->start = 0u;
+    buffer->count = 0u;
     
     if (data == NULL)
     {
@@ -15,41 +17,27 @@ int8 Cb_initialize(CircularBuffer *buffer, uint16 bufferSize, uint16 dataSize, v
     }
     
     if (buffer->startPointer == NULL)    //memory full
+    {
         return (int8)(-1);
-    
-    buffer->inPointer = buffer->startPointer;// + buffer->dataSize;
-    buffer->outPointer = buffer->startPointer;   //empty buffer
+    }
     
     return (int8)(0);
 }
 
 int8 Cb_put(CircularBuffer *buffer, void *item)
 {
-    if ((buffer->inPointer == (buffer->outPointer - buffer->dataSize)) || 
-        ((buffer->inPointer == (buffer->startPointer+buffer->bufferSize)) && (buffer->outPointer == buffer->startPointer)))  //buffer full
-    {
-        return (int8)(-1);
-    }
+    uint16 end;
     
-    memcpy(buffer->inPointer, item, buffer->dataSize);
+    end = (buffer->start + buffer->count) % buffer->bufferSize;
+    memcpy((void*)(&((uint8*)(buffer->startPointer))[end]), item, buffer->dataSize);
     
-    //increase the pointer
-    if (buffer->inPointer >= (buffer->startPointer+buffer->bufferSize))
+    if (buffer->count == buffer->bufferSize)
     {
-        buffer->inPointer = buffer->startPointer;
+        return (int8)(-1); // full
     }
     else
     {
-        void *newPointer;
-        newPointer = buffer->inPointer + buffer->dataSize;
-        if (newPointer > buffer->startPointer)
-        {
-            buffer->inPointer = newPointer;
-        }
-        else 
-        {
-            buffer->inPointer = buffer->startPointer;   // if we are here you probably have not enough memory
-        }
+        buffer->count += buffer->dataSize;
     }
     
     return (int8)(0);
@@ -57,29 +45,14 @@ int8 Cb_put(CircularBuffer *buffer, void *item)
 
 int8 Cb_get(CircularBuffer *buffer, void *item)
 {
-    if (buffer->outPointer == buffer->inPointer)   //buffer empty
-        return (int8)(-1);
+    if (buffer->count == 0u)
+    {
+         return (int8)(-1); // buffer empty
+    }
     
-    memcpy(item, buffer->outPointer, buffer->dataSize);
-     
-    //increase the pointer
-    if (buffer->outPointer >= (buffer->startPointer+buffer->bufferSize))
-    {
-        buffer->outPointer = buffer->startPointer;
-    }
-    else
-    {
-        void *newPointer;
-        newPointer = buffer->outPointer + buffer->dataSize;
-        if (newPointer > buffer->startPointer)
-        {
-            buffer->outPointer = newPointer;
-        }
-        else 
-        {
-            buffer->outPointer = buffer->startPointer;   // if we are here you probably have not enough memory
-        }
-    }
+    memcpy(item, (void*)(&((uint8*)(buffer->startPointer))[buffer->start]), buffer->dataSize);
+    buffer->start = (buffer->start + buffer->dataSize) % buffer->bufferSize;
+    buffer->count -= buffer->dataSize;
     
     return (int8)(0);
 }
