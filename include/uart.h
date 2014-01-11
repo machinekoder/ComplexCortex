@@ -25,11 +25,11 @@
 
 /** Size of UARTs circular buffer for reading */
 #ifndef UART_READ_BUFFER_SIZE
-#define UART_READ_BUFFER_SIZE 420u
+#define UART_READ_BUFFER_SIZE 200u
 #endif
 /** Size of UARTs circular buffer for writing */
 #ifndef UART_WRITE_BUFFER_SIZE
-#define UART_WRITE_BUFFER_SIZE 420u
+#define UART_WRITE_BUFFER_SIZE 350u
 #endif
 /** Defines wheter the UART buffer should be used or not */
 #ifndef USE_UART_BUFFER

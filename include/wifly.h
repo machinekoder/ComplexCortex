@@ -16,11 +16,44 @@
 #include <timer.h>
 #include <timeout.h>
 #include <xprintf.h>
+#include <generic.h>
 
 typedef enum {
-    WiFly_State_Connected = 0u,
-    WiFly_State_Disconnected = 1u
-} WiFly_State;
+    WiFly_ConnectionState_Connected = 0u,
+    WiFly_ConnectionState_Disconnected = 1u
+} WiFly_ConnectionState;
+
+typedef enum {
+    WiFly_NetworkMode_Infrastructure = 0u,
+    WiFly_NetworkMode_AdHoc = 1u,
+    WiFly_NetworkMode_AccessPoint = 2u
+} WiFly_NetworkMode;
+
+typedef enum {
+    WiFly_WlanAuthenticationState_NotOk = 0u,
+    WiFly_WlanAuthenticationState_Ok = 1u
+} WiFly_WlanAuthenticationState;
+
+typedef enum {
+    WiFly_WlanAssociationState_NotOk = 0u,
+    WiFly_WlanAssociationState_Ok = 1u
+} WiFly_WlanAssociationState;
+
+typedef enum {
+    WiFly_TcpStatus_Idle = 0u,
+    WiFly_TcpStatus_Connected = 1u,
+    WiFly_TcpStatus_NoIp = 3u,
+    WiFly_TcpStatus_Connecting = 4u,
+    WiFly_TcpStatus_ChallengeForPassword = 5u
+} WiFly_TcpStatus;
+
+typedef struct {
+    WiFly_NetworkMode networkMode;
+    uint8 wlanChannel;
+    WiFly_WlanAuthenticationState wlanAuthenticationState;
+    WiFly_WlanAssociationState wlanAssociationState;
+    WiFly_TcpStatus tcpStatus;
+} WiFly_Status;
 
 int8 WiFly_initialize(Uart uart, uint32 baudrate);
 
@@ -587,7 +620,12 @@ void WiFly_processTask();
  */
 char* WiFly_getResponse();
 
+/** Returns the whether the TCP connection is established or not
+ *  @return 1 if connected 0 if not
+ */
 uint8 WiFly_isConnected();
+
+WiFly_Status WiFly_getStatus();
 
 int8 WiFly_setAdhocParams();
 int8 WiFly_setInfrastructureParams();

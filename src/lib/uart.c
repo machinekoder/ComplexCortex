@@ -720,7 +720,7 @@ void Uart_processTask0()
             (receivedData != UART0_SECONDARY_COMMAND_CHAR))
         {
             taskBuffer0[taskBufferPos0] = receivedData;
-            if (taskBufferPos0 < UART_TASK_BUFFER_SIZE-1u)
+            if (taskBufferPos0 < (UART_TASK_BUFFER_SIZE-1u))
             {
                 taskBufferPos0++;
             }
@@ -748,7 +748,7 @@ void Uart_processTask1()
             (receivedData != UART1_SECONDARY_COMMAND_CHAR))
         {
             taskBuffer1[taskBufferPos1] = receivedData;
-            if (taskBufferPos1 < UART_TASK_BUFFER_SIZE-1u)
+            if (taskBufferPos1 < (UART_TASK_BUFFER_SIZE-1u))
             {
                 taskBufferPos1++;
             }
@@ -776,7 +776,7 @@ void Uart_processTask2()
             (receivedData != UART2_SECONDARY_COMMAND_CHAR))
         {
             taskBuffer2[taskBufferPos2] = receivedData;
-            if (taskBufferPos2 < UART_TASK_BUFFER_SIZE-1u)
+            if (taskBufferPos2 < (UART_TASK_BUFFER_SIZE-1u))
             {
                 taskBufferPos2++;
             }
@@ -804,7 +804,7 @@ void Uart_processTask3()
             (receivedData != UART3_SECONDARY_COMMAND_CHAR))
         {
             taskBuffer3[taskBufferPos3] = receivedData;
-            if (taskBufferPos3 < UART_TASK_BUFFER_SIZE-1u)
+            if (taskBufferPos3 < (UART_TASK_BUFFER_SIZE-1u))
             {
                 taskBufferPos3++;
             }
