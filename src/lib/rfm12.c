@@ -134,7 +134,7 @@ void Rfm12_prepareOokReceiving(Rfm12 id, Rfm12_FrequencyBand frequencyBand, floa
     Rfm12_setBaseConfig(id,             Rfm12_TxFifo_Disabled, 
                                         Rfm12_RxFifo_Disabled, 
                                         Rfm12_FrequencyBand868Mhz, 
-                                        Rfm12_CrystalLoadCapacitance12_0pF
+                                        Rfm12_CrystalLoadCapacitance11_5pF
                       );
     Rfm12_setPowerManagement(id,        Rfm12_ReceiverEnabled,
                                         Rfm12_BasebandEnabled,
@@ -152,8 +152,8 @@ void Rfm12_prepareOokReceiving(Rfm12 id, Rfm12_FrequencyBand frequencyBand, floa
     );
     Rfm12_setReceiverControl(id,        Rfm12_DataPinVdi,
                                         Rfm12_ValidDataIndicatorResponseFast,
-                                        Rfm12_ReceiverBasebandBandwidth400kHz,
-                                        Rfm12_LnaGain6dB,
+                                        Rfm12_ReceiverBasebandBandwidth200kHz,
+                                        Rfm12_LnaGain0dB,
                                         Rfm12_RssiDetectorThreshold97dB
                            );
     Rfm12_setDataFilter(id,             Rfm12_AutoLockDisabled,
