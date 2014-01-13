@@ -157,21 +157,42 @@ int8 WiFly_setComm(char c)
 int8 WiFly_setCommClose(char *string)
 {
     strncpy(commCloseString, string, 10u);
-    xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set c c %s\r", string);
+    if (strlen(string) != 0u)
+    {
+        xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set c c %s\r", string);
+    }
+    else
+    {
+        strcpy(commandBuffer, "set c c 0\r");
+    }
     return setCommand(commandBuffer);
 }
 
 int8 WiFly_setCommOpen(char *string)
 {
     strncpy(commOpenString, string, 10u);
-    xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set c o %s\r", string);
+    if (strlen(string) != 0u)
+    {
+        xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set c o %s\r", string);
+    }
+    else
+    {
+        strcpy(commandBuffer, "set c o 0\r");
+    }
     return setCommand(commandBuffer);
 }
 
 int8 WiFly_setCommRemote(char *string)
 {
     strncpy(commRemoteString, string, 10u);
-    xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set c r %s\r", string);
+    if (strlen(string) != 0u)
+    {
+        xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set c r %s\r", string);
+    }
+    else
+    {
+        strcpy(commandBuffer, "set c r 0\r");
+    }
     return setCommand(commandBuffer);
 }
 
@@ -201,37 +222,79 @@ int8 WiFly_setCommTime(uint32 num)
 
 int8 WiFly_setDnsAddr(char *addr)
 {
-    xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set d a %s\r", addr);
+    if (strlen(addr) != 0u)
+    {
+        xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set d a %s\r", addr);
+    }
+    else
+    {
+        strcpy(commandBuffer, "set d a 0\r");
+    }
     return setCommand(commandBuffer);
 }
 
 int8 WiFly_setDnsName(char *string)
 {
-    xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set d n %s\r", string);
+    if (strlen(string) != 0u)
+    {
+        xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set d n %s\r", string);
+    }
+    else
+    {
+        strcpy(commandBuffer, "set d n 0\r");
+    }
     return setCommand(commandBuffer);
 }
 
 int8 WiFly_setDnsBackup(char *string)
 {
-    xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set d b %s\r", string);
+    if (strlen(string) != 0u)
+    {
+        xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set d b %s\r", string);
+    }
+    else
+    {
+        strcpy(commandBuffer, "set d b 0\r");
+    }
     return setCommand(commandBuffer);
 }
 
 int8 WiFly_setFtpAddr(char *addr)
 {
-    xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set f a %s\r", addr);
+    if (strlen(addr) != 0u)
+    {
+        xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set f a %s\r", addr);
+    }
+    else
+    {
+        strcpy(commandBuffer, "set f a 0\r");
+    }
     return setCommand(commandBuffer);
 }
 
 int8 WiFly_setFtpDir(char *string)
 {
-    xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set f d %s\r", string);
+    if (strlen(string) != 0u)
+    {
+        xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set f d %s\r", string);
+    }
+    else
+    {
+        strcpy(commandBuffer, "set f d 0\r");
+    }
     return setCommand(commandBuffer);
 }
 
 int8 WiFly_setFtpFilename(char *file)
 {
-    xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set f f %s\r", file);
+    if (strlen(file) != 0u)
+    {
+        xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set f f %s\r", file);
+    }
+    else
+    {
+        strcpy(commandBuffer, "set f f 0\r");
+    }
     return setCommand(commandBuffer);
 }
 
@@ -255,25 +318,53 @@ int8 WiFly_setFtpTime(uint32 value)
 
 int8 WiFly_setFtpUser(char *name)
 {
-    xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set f u %s\r", name);
+    if (strlen(name) != 0u)
+    {
+        xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set f u %s\r", name);
+    }
+    else
+    {
+        strcpy(commandBuffer, "set f u 0\r");
+    }
     return setCommand(commandBuffer);
 }
 
 int8 WiFly_setFtpPass(char *pass)
 {
-    xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set f p %s\r", pass);
+    if (strlen(pass) != 0u)
+    {
+        xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set f p %s\r", pass);
+    }
+    else
+    {
+        strcpy(commandBuffer, "set f p 0\r");
+    }
     return setCommand(commandBuffer);
 }
 
 int8 WiFly_setIpAddress(char *addr)
 {
-    xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set i a %s\r", addr);
+    if (strlen(addr) != 0u)
+    {
+        xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set i a %s\r", addr);
+    }
+    else
+    {
+        strcpy(commandBuffer, "set i a 0\r");
+    }
     return setCommand(commandBuffer);
 }
 
 int8 WiFly_setIpBackup(char *addr)
 {
-    xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set i b %s\r", addr);
+    if (strlen(addr) != 0u)
+    {
+        xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set i b %s\r", addr);
+    }
+    else
+    {
+        strcpy(commandBuffer, "set i b 0\r");
+    }
     return setCommand(commandBuffer);
 }
 
@@ -291,13 +382,27 @@ int8 WiFly_setIpFlags(uint32 value)
 
 int8 WiFly_setIpGateway(char *addr)
 {
-    xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set i g %s\r", addr);
+    if (strlen(addr) != 0u)
+    {
+        xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set i g %s\r", addr);
+    }
+    else
+    {
+        strcpy(commandBuffer, "set i g 0\r");
+    }
     return setCommand(commandBuffer);
 }
 
 int8 WiFly_setIpHost(char *addr)
 {
-    xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set i h %s\r", addr);
+    if (strlen(addr) != 0u)
+    {
+        xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set i h %s\r", addr);
+    }
+    else
+    {
+        strcpy(commandBuffer, "set i h 0\r");
+    }
     return setCommand(commandBuffer);
 }
 
@@ -309,7 +414,14 @@ int8 WiFly_setIpLocalport(uint32 num)
 
 int8 WiFly_setIpNetmask(char *value)
 {
-    xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set i n %s\r", value);
+    if (strlen(value) != 0u)
+    {
+        xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set i n %s\r", value);
+    }
+    else
+    {
+        strcpy(commandBuffer, "set i n 0\r");
+    }
     return setCommand(commandBuffer);
 }
 
@@ -351,13 +463,27 @@ int8 WiFly_setOptReplace(char character)
 
 int8 WiFly_setOptDeviceid(char *string)
 {
-    xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set o d %s\r", string);
+    if (strlen(string) != 0u)
+    {
+        xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set o d %s\r", string);
+    }
+    else
+    {
+        strcpy(commandBuffer, "set o d 0\r");
+    }
     return setCommand(commandBuffer);
 }
 
 int8 WiFly_setOptPassword(char *string)
 {
-    xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set o p %s\r", string);
+    if (strlen(string) != 0u)
+    {
+        xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set o p %s\r", string);
+    }
+    else
+    {
+        strcpy(commandBuffer, "set o p 0\r");
+    }
     return setCommand(commandBuffer);
 }
 
@@ -423,7 +549,14 @@ int8 WiFly_setSysWake(uint32 secs)
 
 int8 WiFly_setTimeAddress(char *addr)
 {
-    xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set t a %s\r", addr);
+    if (strlen(addr) != 0u)
+    {
+        xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set t a %s\r", addr);
+    }
+    else
+    {
+        strcpy(commandBuffer, "set t a 0\r");
+    }
     return setCommand(commandBuffer);
 }
 
@@ -513,7 +646,14 @@ int8 WiFly_setWlanHide(uint8 enabled)
 
 int8 WiFly_setWlanKey(char *value)
 {
-    xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set w k %s\r", value);
+    if (strlen(value) != 0u)
+    {
+        xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set w k %s\r", value);
+    }
+    else
+    {
+        strcpy(commandBuffer, "set w k 0\r");
+    }
     return setCommand(commandBuffer);
 }
 
@@ -537,7 +677,14 @@ int8 WiFly_setWlanNum(uint8 value)
 
 int8 WiFly_setWlanPhrase(char *string)
 {
-    xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set w p %s\r", string);
+    if (strlen(string) != 0u)
+    {
+        xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set w p %s\r", string);
+    }
+    else
+    {
+        strcpy(commandBuffer, "set w p 0\r");
+    }
     return setCommand(commandBuffer);
 }
 
@@ -549,7 +696,14 @@ int8 WiFly_setWlanRate(uint8 value)
 
 int8 WiFly_setWlanSsid(char *string)
 {
-    xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set w s %s\r", string);
+    if (strlen(string) != 0u)
+    {
+        xsnprintf(commandBuffer, WIFLY_COMMAND_BUFFER_SIZE, "set w s %s\r", string);
+    }
+    else
+    {
+        strcpy(commandBuffer, "set w s 0\r");
+    }
     return setCommand(commandBuffer);
 }
 
@@ -976,7 +1130,14 @@ inline void WiFly_processTask()
         else
         {
             taskBuffer[taskBufferPos] = '\0';
-            internalProcessTask(taskBuffer);
+            if (taskBuffer[0u] != '*')
+            {
+                internalProcessTask(taskBuffer);
+            }
+            else    // this command was sent from a client -> ignore *
+            {
+                internalProcessTask(&(taskBuffer[1u]));
+            }
             taskBufferPos = 0u;
         }
     }
@@ -992,12 +1153,10 @@ void internalProcessTask(char *command)
         if (strncmp(command, commOpenString, 5u) == (int)0)// command[1u] == commOpenString[2u])
         {
             wiFlyState = WiFly_ConnectionState_Connected;
-            Uart_flush(wiflyUart);
         }
         else if (strncmp(command, commCloseString, 5u) == (int)0)
         {
             wiFlyState = WiFly_ConnectionState_Disconnected;
-            Uart_flush(wiflyUart);
         }
         else if (commandLength >= 5u) // status command, udp message can be attached
         {
