@@ -39,7 +39,7 @@
 #define WIFLY_SOFTWARE_REBOOT_RETRY_ATTEMPTS    5u
 #endif
 #ifndef WIFLY_TASK_BUFFER_SIZE
-#define WIFLY_TASK_BUFFER_SIZE                  450u
+#define WIFLY_TASK_BUFFER_SIZE                  500u
 #endif
 #ifndef WIFLY_COMMAND_CHAR
 #define WIFLY_COMMAND_CHAR                      13  // carriage return

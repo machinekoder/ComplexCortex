@@ -2,25 +2,30 @@
 #include <core_cm3.h>
 
 #if USE_UART_BUFFER
+#if USE_UART0
 static CircularBuffer uart0ReadBuffer;
 static char           uart0ReadBufferData[UART_READ_BUFFER_SIZE];
 static CircularBuffer uart0WriteBuffer;
 static char           uart0WriteBufferData[UART_WRITE_BUFFER_SIZE];
-
+#endif
+#if USE_UART1
 static CircularBuffer uart1ReadBuffer;
 static char           uart1ReadBufferData[UART_READ_BUFFER_SIZE];
 static CircularBuffer uart1WriteBuffer;
 static char           uart1WriteBufferData[UART_WRITE_BUFFER_SIZE];
-
+#endif
+#if USE_UART2
 static CircularBuffer uart2ReadBuffer;
 static char           uart2ReadBufferData[UART_READ_BUFFER_SIZE];
 static CircularBuffer uart2WriteBuffer;
 static char           uart2WriteBufferData[UART_WRITE_BUFFER_SIZE];
-
+#endif
+#if USE_UART3
 static CircularBuffer uart3ReadBuffer;
 static char           uart3ReadBufferData[UART_READ_BUFFER_SIZE];
 static CircularBuffer uart3WriteBuffer;
 static char           uart3WriteBufferData[UART_WRITE_BUFFER_SIZE];
+#endif
 #endif
 
 #if USE_UART_TASK
