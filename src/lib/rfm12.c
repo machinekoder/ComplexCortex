@@ -22,7 +22,7 @@ int8 Rfm12_initialize(Rfm12 id, Ssp ssp, Gpio_Pair selPair, Gpio_Pair dataPair)
                     Ssp_ClockOutPolarity_Low,
                     Ssp_ClockOutPhase_First
               );
-    sspIds[(uint8)id] = Ssp_initializeSel(ssp, selPair.port, selPair.pin);
+    sspIds[(uint8)id] = Ssp_initializeSel(ssp, selPair.port, selPair.pin, Ssp_AutoSel_Enabled);
     
     dataPairs[id] = dataPair;
     ssps[id] = ssp;
@@ -332,19 +332,23 @@ void Rfm12_setFrequency(Rfm12 id, Rfm12_FrequencyBand frequencyBand, float frequ
     
     if (frequencyBand == Rfm12_FrequencyBand315Mhz)
     {
-        frequencyData = (frequency - 310.0) * 400.0;
+        frequencyData = (uint16)((frequency - 310.0) * 400.0);
     }
     else if (frequencyBand == Rfm12_FrequencyBand433Mhz)
     {
-        frequencyData = (frequency - 430.0) * 400.0;
+        frequencyData = (uint16)((frequency - 430.0) * 400.0);
     }
     else if (frequencyBand == Rfm12_FrequencyBand868Mhz)
     {
-        frequencyData = (frequency - 860.0) * 200.0;
+        frequencyData = (uint16)((frequency - 860.0) * 200.0);
     }
     else if (frequencyBand == Rfm12_FrequencyBand915Mhz)
     {
-        frequencyData = (frequency - 900.0) * 133.3;
+        frequencyData = (uint16)((frequency - 900.0) * 133.3);
+    }
+    else
+    {
+        return;
     }
     
     data = 0xA000u | (frequencyData << 0);
