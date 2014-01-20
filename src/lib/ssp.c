@@ -7,6 +7,8 @@ static volatile Ssp_Loopback ssp1_loopbackMode;
 
 static volatile Gpio_Pair ssp0_selPins[SSP_MAX_SEL_PINS];
 static volatile Gpio_Pair ssp1_selPins[SSP_MAX_SEL_PINS];
+static volatile uint8 ssp0_autoSelEnabled[SSP_MAX_SEL_PINS];
+static volatile uint8 ssp1_autoSelEnabled[SSP_MAX_SEL_PINS];
 static uint8 ssp0_selCount;
 static uint8 ssp1_selCount;
 
@@ -136,6 +138,7 @@ void Ssp_initialize(Ssp ssp,
 
         SSP0_SET_CPSR(cpsdvsr);
 
+        SSP0_CLEAR_CR();
         SSP0_SET_DATA_SIZE(dataSize);
         SSP0_SET_FRAME_FORMAT(frameFormat);
         SSP0_SET_CPOL(clockOutPolarity);
@@ -257,6 +260,7 @@ void Ssp_initialize(Ssp ssp,
 
         SSP1_SET_CPSR(cpsdvsr);
 
+        SSP1_CLEAR_CR();
         SSP1_SET_DATA_SIZE(dataSize);
         SSP1_SET_FRAME_FORMAT(frameFormat);
         SSP1_SET_CPOL(clockOutPolarity);
@@ -323,27 +327,93 @@ void SSP1_IRQHANDLER()
     }
 }
 
-uint8 Ssp_initializeSel(Ssp ssp, uint8 port, uint8 pin)
+uint8 Ssp_initializeSel(Ssp ssp, uint8 port, uint8 pin, Ssp_AutoSel autoSelEnabled)
 {
+    uint8 found;
+    uint8 selId;
+    uint8 i;
+    
     Gpio_setDirection(port, pin, Gpio_Direction_Output);
     Pin_setMode(port, pin, Pin_Mode_PullUp);
     Gpio_set(port, pin);
     
+    found = false;
+    
     if (ssp == Ssp0)
     {
-        ssp0_selPins[ssp0_selCount].pin = pin;
-        ssp0_selPins[ssp0_selCount].port = port;
-        return ssp0_selCount++; 
+        for (i = 0u; i < SSP_MAX_SEL_PINS; i++) // search if sel pin already exists
+        {
+            if ((ssp0_selPins[i].port == port)
+                && (ssp0_selPins[i].pin == pin))
+            {
+                selId = i;
+                found = true;
+                break;
+            }
+        }
+        
+        if ((found = false) || (ssp0_selCount == 0u))
+        {
+            selId = ssp0_selCount;
+            ssp0_selCount++;
+        }
+        
+        ssp0_autoSelEnabled[selId] = (uint8)autoSelEnabled;
+        ssp0_selPins[selId].pin = pin;
+        ssp0_selPins[selId].port = port;
+        return selId; 
     }
     else if (ssp == Ssp1)
     {
-        ssp1_selPins[ssp1_selCount].pin = pin;
-        ssp1_selPins[ssp1_selCount].port = port;
-        return ssp1_selCount++;
+        for (i = 0u; i < SSP_MAX_SEL_PINS; i++) // search if sel pin already exists
+        {
+            if ((ssp1_selPins[i].port == port)
+                && (ssp1_selPins[i].pin == pin))
+            {
+                selId = i;
+                found = true;
+                break;
+            }
+        }
+        
+        if ((found = false) || (ssp0_selCount == 0u))
+        {
+            selId = ssp1_selCount;
+            ssp1_selCount++;
+        }
+        
+        ssp1_autoSelEnabled[selId] = (uint8)autoSelEnabled;
+        ssp1_selPins[selId].pin = pin;
+        ssp1_selPins[selId].port = port;
+        return selId;
     }
     else
     {
         return 0u;  // we should not get here if params where correct
+    }
+}
+
+void Ssp_enableSel(Ssp ssp, uint8 selId)
+{
+    if (ssp == Ssp0)
+    {
+        Gpio_clear(ssp0_selPins[selId].port, ssp0_selPins[selId].pin);
+    }
+    else
+    {
+        Gpio_clear(ssp1_selPins[selId].port, ssp1_selPins[selId].pin);
+    }
+}
+
+void Ssp_disableSel(Ssp ssp, uint8 selId)
+{
+    if (ssp == Ssp0)
+    {
+        Gpio_set(ssp0_selPins[selId].port, ssp0_selPins[selId].pin);
+    }
+    else
+    {
+        Gpio_set(ssp1_selPins[selId].port, ssp1_selPins[selId].pin);
     }
 }
 
@@ -353,7 +423,10 @@ void Ssp_write(Ssp ssp, uint8 selId, uint16 data)
    
    if (ssp == Ssp0)
    {
-        Gpio_clear(ssp0_selPins[selId].port, ssp0_selPins[selId].pin);
+        if (ssp0_autoSelEnabled[selId] == Ssp_AutoSel_Enabled)
+        {
+            Gpio_clear(ssp0_selPins[selId].port, ssp0_selPins[selId].pin);
+        }
     
         while ( SSP0_TRANSMIT_BUFFER_NOT_EMPTY_OR_BUSY() ) { }  // Move on only if NOT busy and TX FIFO not full.
         SSP0_WRITE_DATA_REGISTER(data);
@@ -368,12 +441,18 @@ void Ssp_write(Ssp ssp, uint8 selId, uint16 data)
             while ( SSP0_BUSY() ) { }                           // Wait until the Busy bit is cleared.
         }
         
-        Gpio_set(ssp0_selPins[selId].port, ssp0_selPins[selId].pin);
+        if (ssp0_autoSelEnabled[selId] == Ssp_AutoSel_Enabled)
+        {
+            Gpio_set(ssp0_selPins[selId].port, ssp0_selPins[selId].pin);
+        }
    }
    else if (ssp == Ssp1)
    {
-        Gpio_clear(ssp1_selPins[selId].port, ssp1_selPins[selId].pin);
-   
+        if (ssp1_autoSelEnabled[selId] == Ssp_AutoSel_Enabled)
+        {
+            Gpio_clear(ssp1_selPins[selId].port, ssp1_selPins[selId].pin);
+        }
+        
         while ( SSP1_TRANSMIT_BUFFER_NOT_EMPTY_OR_BUSY() ) { }  // Move on only if NOT busy and TX FIFO not full.
         SSP1_WRITE_DATA_REGISTER(data);
     
@@ -387,7 +466,10 @@ void Ssp_write(Ssp ssp, uint8 selId, uint16 data)
             while ( SSP1_BUSY() ) { }                           // Wait until the Busy bit is cleared.
         }
         
-        Gpio_set(ssp1_selPins[selId].port, ssp1_selPins[selId].pin);
+        if (ssp1_autoSelEnabled[selId] == Ssp_AutoSel_Enabled)
+        {
+            Gpio_set(ssp1_selPins[selId].port, ssp1_selPins[selId].pin);
+        }
    }
 }
 
@@ -395,13 +477,16 @@ void Ssp_read(Ssp ssp, uint8 selId, uint16 *data)
 {
    if (ssp == Ssp0)
    {
-        Gpio_clear(ssp0_selPins[selId].port, ssp0_selPins[selId].pin);
+        if (ssp0_autoSelEnabled[selId] == Ssp_AutoSel_Enabled)
+        {
+            Gpio_clear(ssp0_selPins[selId].port, ssp0_selPins[selId].pin);
+        }
     
         if (ssp0_loopbackMode == Ssp_Loopback_Disabled)
         {
             if (ssp0_masterSlave == Ssp_Mode_Master)
             {
-                SSP0_WRITE_DATA_REGISTER(0xFF);                     // Write anything to the bus
+                SSP0_WRITE_DATA_REGISTER(0x00u);                     // Write anything to the bus
                 while (SSP0_RECEIVE_BUFFER_EMPTY_OR_BUSY()) { }     // Wait for incoming
             }
             else if (ssp0_masterSlave == Ssp_Mode_Slave)
@@ -416,18 +501,24 @@ void Ssp_read(Ssp ssp, uint8 selId, uint16 *data)
         
         *data = SSP0_READ_DATA_REGISTER();
         
-        Gpio_set(ssp0_selPins[selId].port, ssp0_selPins[selId].pin);
+        if (ssp0_autoSelEnabled[selId] == Ssp_AutoSel_Enabled)
+        {
+            Gpio_set(ssp0_selPins[selId].port, ssp0_selPins[selId].pin);
+        }
         
    }
    else if (ssp == Ssp1)
    {
-       Gpio_clear(ssp1_selPins[selId].port, ssp1_selPins[selId].pin);
+       if (ssp1_autoSelEnabled[selId] == Ssp_AutoSel_Enabled)
+       {
+           Gpio_clear(ssp1_selPins[selId].port, ssp1_selPins[selId].pin);
+       }
         
         if (ssp1_loopbackMode == Ssp_Loopback_Disabled)
         {
             if (ssp1_masterSlave == Ssp_Mode_Master)
             {
-                SSP1_WRITE_DATA_REGISTER(0xFF);                     // Write anything to the bus
+                SSP1_WRITE_DATA_REGISTER(0x00u);                     // Write anything to the bus
                 while (SSP1_RECEIVE_BUFFER_EMPTY_OR_BUSY()) { }     // Wait for incoming
             }
             else if (ssp1_masterSlave == Ssp_Mode_Slave)
@@ -442,7 +533,10 @@ void Ssp_read(Ssp ssp, uint8 selId, uint16 *data)
 
         *data = SSP1_READ_DATA_REGISTER();
         
-        Gpio_set(ssp1_selPins[selId].port, ssp1_selPins[selId].pin);
+        if (ssp1_autoSelEnabled[selId] == Ssp_AutoSel_Enabled)
+        {
+            Gpio_set(ssp1_selPins[selId].port, ssp1_selPins[selId].pin);
+        }
    }
 }
 
@@ -450,24 +544,38 @@ void Ssp_readWrite(Ssp ssp, uint8 selId, uint16 writeData, uint16 *readData)
 {
     if (ssp == Ssp0)
     {
-        Gpio_clear(ssp0_selPins[selId].port, ssp0_selPins[selId].pin);
-
+        if (ssp0_autoSelEnabled[selId] == Ssp_AutoSel_Enabled)
+        {
+            Gpio_clear(ssp0_selPins[selId].port, ssp0_selPins[selId].pin);
+        }
+        
+        while ( SSP0_TRANSMIT_BUFFER_NOT_EMPTY_OR_BUSY() ) { }          // Move on only if NOT busy and TX FIFO not full.
         SSP0_WRITE_DATA_REGISTER(writeData);                            // Write anything to the bus
         while (SSP0_RECEIVE_BUFFER_EMPTY_OR_BUSY()) { }                 // Wait for incoming
             
         *readData = SSP0_READ_DATA_REGISTER();
         
-        Gpio_set(ssp0_selPins[selId].port, ssp0_selPins[selId].pin);
+        if (ssp0_autoSelEnabled[selId] == Ssp_AutoSel_Enabled)
+        {
+            Gpio_set(ssp0_selPins[selId].port, ssp0_selPins[selId].pin);
+        }
     }
     else if (ssp == Ssp1)
     {
-        Gpio_clear(ssp1_selPins[selId].port, ssp1_selPins[selId].pin);
+        if (ssp1_autoSelEnabled[selId] == Ssp_AutoSel_Enabled)
+        {
+            Gpio_clear(ssp1_selPins[selId].port, ssp1_selPins[selId].pin);
+        }
         
+        while ( SSP1_TRANSMIT_BUFFER_NOT_EMPTY_OR_BUSY() ) { }          // Move on only if NOT busy and TX FIFO not full.
         SSP1_WRITE_DATA_REGISTER(writeData);                            // Write something to the bus     
         while (SSP1_RECEIVE_BUFFER_EMPTY_OR_BUSY()) { }                 // Wait for incoming
         
         *readData = SSP1_READ_DATA_REGISTER();
         
-        Gpio_set(ssp1_selPins[selId].port, ssp1_selPins[selId].pin);
+        if (ssp1_autoSelEnabled[selId] == Ssp_AutoSel_Enabled)
+        {
+            Gpio_set(ssp1_selPins[selId].port, ssp1_selPins[selId].pin);
+        }
     }
 }

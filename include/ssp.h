@@ -86,6 +86,12 @@ typedef enum
     Ssp_SlaveOutput_Disabled = 1u
 } Ssp_SlaveOutput;
 
+typedef enum
+{
+    Ssp_AutoSel_Enabled = 1u,
+    Ssp_AutoSel_Disabled = 0u
+} Ssp_AutoSel;
+
 /** Initializes SSP hardware device
  *  @param ssp              The SSP device to initialize.
  *  @param baudrate         The baudrate the SSP device should be initialized with.
@@ -107,7 +113,23 @@ extern void Ssp_initialize(Ssp ssp,
                            Ssp_ClockOutPolarity clockOutPolarity,
                            Ssp_ClockOutPhase clockOutPhase
                           );
-extern uint8 Ssp_initializeSel(Ssp ssp, uint8 port, uint8 pin);
+/** Initializes the SEL pin for a SPI peripheral
+ *  @param ssp The SSP device to initialize the SEL pin to.
+ *  @param port Port of the SEL pin.
+ *  @param pin Pin of the SEL pin.
+ *  @return ID of the initialized SEL pin.
+ */
+extern uint8 Ssp_initializeSel(Ssp ssp, uint8 port, uint8 pin, Ssp_AutoSel autoSelEnabled);
+/** Enables a SEL pin, usually that means the output is set to low.
+ *  @param ssp The SSP device on which a SEL pin should be enabled
+ *  @param selId The ID of the SEL pin to enable.
+ */
+extern void Ssp_enableSel(Ssp ssp, uint8 selId);
+/** Disables a SEL pin, usually that means the output is set to high.
+ *  @param ssp The SSP device on which a SEL pin should be disabled
+ *  @param selId The ID of the SEL pin to disable.
+ */
+extern void Ssp_disableSel(Ssp ssp, uint8 selId);
 /** Puts a character to the SSP1 bus and discards the received data.
  *  @param ssp      The SSP device to write to.
  *  @param data     The data to write.
